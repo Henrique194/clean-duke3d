@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef Duke3D_premap_h
-#define Duke3D_premap_h
+#pragma once
 
 void P_ResetMys(void);
 
@@ -52,5 +51,3 @@ void P_GenSpriteRemaps(void);
 void P_WaitForEverybody(void);
 
 void P_EnterLevel(uint8_t g);
-
-#endif

@@ -26,8 +26,7 @@
 //
 //****************************************************************************
 
-#ifndef _sounds_public_
-#define _sounds_public_
+#pragma once
 
 #include "types.h"
 
@@ -36,7 +35,7 @@
 enum USRHOOKS_Errors {
     USRHOOKS_Warning = -2,
     USRHOOKS_Error = -1,
-    USRHOOKS_Ok = 0
+    USRHOOKS_Ok = 0,
 };
 
 
@@ -54,26 +53,40 @@ extern int32 numenvsnds;
 
 
 void SoundStartup(void);
+
 void SoundShutdown(void);
+
 void MusicStartup(void);
+
 void MusicShutdown(void);
 
+
 void playmusic(char* fn);
+
 void clearsoundlocks(void);
+
 void intomenusounds(void);
+
 uint8_t loadsound(uint16_t num);
+
 int xyzsound(short num, short i, int32_t x, int32_t y, int32_t z);
+
 void sound(short num);
+
 int spritesound(uint16_t num, short i);
+
 void stopsound(short num);
+
 void stopenvsound(short num, short i);
+
 void pan3dsound(void);
+
 void TestCallBack(int32_t num);
 
 /* dunno where this came from; I added it. --ryan. */
 void testcallback(uint32_t num);
 
-int USRHOOKS_GetMem(void** ptr, uint32_t size);
-int USRHOOKS_FreeMem(void* ptr);
 
-#endif
+int USRHOOKS_GetMem(void** ptr, uint32_t size);
+
+int USRHOOKS_FreeMem(void* ptr);

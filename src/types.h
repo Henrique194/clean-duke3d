@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef _types_public
-#define _types_public
+#pragma once
 
 #include <inttypes.h>
 #include <SDL_stdinc.h>
@@ -82,6 +81,4 @@ typedef float64 appfloat;
 #ifdef __NeXT__
 #define stricmp strcasecmp
 #define strcmpi strcasecmp
-#endif
-
 #endif

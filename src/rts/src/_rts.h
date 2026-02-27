@@ -20,31 +20,29 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef __rts_private__
-#define __rts_private__
+#pragma once
+
+#include "types.h"
 
 //===============
 //   TYPES
 //===============
 
-typedef struct
-   {
-   char  name[8];
-   int32 handle,position,size;
-   } lumpinfo_t;
+typedef struct {
+    char name[8];
+    i32 handle;
+    i32 position;
+    i32 size;
+} lumpinfo_t;
 
-typedef struct
-   {
-   char  identification[4];              // should be IWAD
-   int32 numlumps;
-   int32 infotableofs;
-   } wadinfo_t;
+typedef struct {
+    char identification[4]; // should be IWAD
+    i32 numlumps;
+    i32 infotableofs;
+} wadinfo_t;
 
-typedef struct
-   {
-   int32 filepos;
-   int32 size;
-   char  name[8];
-   } filelump_t;
-
-#endif
+typedef struct {
+    i32 filepos;
+    i32 size;
+    char name[8];
+} filelump_t;

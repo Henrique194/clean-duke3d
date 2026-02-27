@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef _config_public
-#define _config_public
+#pragma once
 
 #define SETUPNAMEPARM "SETUPFILE"
 #define COMMMACRO "CommbatMacro# "
@@ -32,16 +31,25 @@ extern int32 ScreenWidth;
 extern int32 ScreenHeight;
 extern int32 FullScreen;
 
-void CONFIG_ReadSetup(void);
-void CONFIG_GetSetupFilename(void);
-void CONFIG_WriteSetup(void);
-extern int32 CONFIG_FunctionNameToNum(char* func);
-extern char* CONFIG_FunctionNumToName(int32 func);
-extern int32 CONFIG_AnalogNameToNum(char* func);
-extern void CONFIG_SetDefaults(void);
-extern void CONFIG_ReadKeys(void);
-extern void CONFIG_SetupMouse(int32 scripthandle);
-extern void CONFIG_SetupGamePad(int32 scripthandle);
-extern void CONFIG_SetupJoystick(int32 scripthandle);
 
-#endif
+void CONFIG_ReadSetup(void);
+
+void CONFIG_GetSetupFilename(void);
+
+void CONFIG_WriteSetup(void);
+
+extern int32 CONFIG_FunctionNameToNum(char* func);
+
+extern char* CONFIG_FunctionNumToName(int32 func);
+
+extern int32 CONFIG_AnalogNameToNum(char* func);
+
+extern void CONFIG_SetDefaults(void);
+
+extern void CONFIG_ReadKeys(void);
+
+extern void CONFIG_SetupMouse(int32 scripthandle);
+
+extern void CONFIG_SetupGamePad(int32 scripthandle);
+
+extern void CONFIG_SetupJoystick(int32 scripthandle);

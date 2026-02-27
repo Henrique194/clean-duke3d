@@ -5,8 +5,7 @@
  * This file has been modified from Ken Silverman's original release
  */
 
-#ifndef Duke3D_tiles_h
-#define Duke3D_tiles_h
+#pragma once
 
 #include "build/build.h"
 
@@ -68,5 +67,3 @@ int animateoffs(int16_t tilenum);
 extern uint8_t* pic;
 
 void TILE_MakeAvailable(short picID);
-
-#endif

@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef CON_MISC_H
-#define CON_MISC_H
+#pragma once
 
 #include "com_main.h"
 
@@ -38,5 +37,3 @@ void COM_LexNum(con_compiler_t* ctx);
 void COM_LexNum2(con_compiler_t* ctx);
 
 void COM_LexNum5(con_compiler_t* ctx);
-
-#endif

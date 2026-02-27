@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef __rts_public__
-#define __rts_public__
+#pragma once
 
 #include "types.h"
 
@@ -30,19 +29,17 @@
 //
 void RTS_Init(char* filename);
 
-int32 RTS_NumSounds(void);
+i32 RTS_NumSounds(void);
 
 //
 // Returns the buffer size needed to load the given lump
 //
-int32 RTS_SoundLength(int32 lump);
+i32 RTS_SoundLength(i32 lump);
 
-char* RTS_GetSoundName(int32 i);
+char* RTS_GetSoundName(i32 i);
 
-void* RTS_GetSound(int32 lump);
+void* RTS_GetSound(i32 lump);
 
 void RTS_AddFile(char* filename);
 
-void RTS_ReadLump(int32 lump, void* dest);
-
-#endif
+void RTS_ReadLump(i32 lump, void* dest);

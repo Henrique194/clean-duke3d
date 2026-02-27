@@ -28,8 +28,7 @@
 // axis defaults are also included
 
 
-#ifndef _function_private_
-#define _function_private_
+#pragma once
 
 // Don't forget to change NUMGAMEFUNCTIONS as well
 #define NUMKEYENTRIES 55
@@ -159,5 +158,3 @@ key_entry_t keydefaults[] = {
     {"Auto_Aim", "V", ""},
     {"Console", "`", ""},
 };
-
-#endif

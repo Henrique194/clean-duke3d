@@ -5,8 +5,7 @@
  * This file IS NOT A PART OF Ken Silverman's original release
  */
   
-#ifndef _INCLUDE_WIN32_COMPAT_H_
-#define _INCLUDE_WIN32_COMPAT_H_
+#pragma once
 
 #ifndef max
 #define max(x, y)  (((x) > (y)) ? (x) : (y))
@@ -31,7 +30,3 @@
 #endif /* defined _MSC_VER */
 
 #define strncasecmp strnicmp
-
-#endif
-
-/* end of win32_compat.h ... */

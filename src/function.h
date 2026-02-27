@@ -28,8 +28,7 @@
 // axis defaults are also included
 
 
-#ifndef _function_public_
-#define _function_public_
+#pragma once
 
 #define NUMGAMEFUNCTIONS 55 //dont forget to check NUMKEYENTRIES
 
@@ -92,5 +91,3 @@ typedef enum {
     GF_AUTO_AIM,
     GF_CONSOLE,
 } game_func_t;
-
-#endif

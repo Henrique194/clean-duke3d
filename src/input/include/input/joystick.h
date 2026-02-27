@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef JOYSTICK_H
-#define JOYSTICK_H
+#pragma once
 
 #include "control.h"
 
@@ -71,5 +70,3 @@ void CONTROL_SetAnalogAxisDeadzone(int32 whichaxis, int32 axisdeadzone);
 int32 CONTROL_GetFilteredAxisValue(int32 axis);
 
 int32 CONTROL_FilterDeadzone(int32 axisvalue, int32 axisdeadzone);
-
-#endif

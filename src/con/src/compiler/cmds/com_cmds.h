@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef CON_CMDS_H
-#define CON_CMDS_H
+#pragma once
 
 #include "com_main.h"
 
@@ -98,5 +97,3 @@ void COM_PalFrom(con_compiler_t* ctx);
 void COM_State(con_compiler_t* ctx);
 
 void COM_Ends(con_compiler_t* ctx);
-
-#endif

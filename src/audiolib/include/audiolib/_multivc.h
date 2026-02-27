@@ -31,8 +31,7 @@
    (c) Copyright 1993 James R. Dose.  All Rights Reserved.
 **********************************************************************/
 
-#ifndef ___MULTIVC_H
-#define ___MULTIVC_H
+#pragma once
 
 #define TRUE  ( 1 == 1 )
 #define FALSE ( !TRUE )
@@ -283,5 +282,3 @@ void MV_16BitReverbFast( const uint8_t *src, uint8_t *dest, int count, int shift
 
 void MV_8BitReverbFast( const int8_t *src, int8_t *dest, int count, int shift );
 */
-
-#endif

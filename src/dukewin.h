@@ -20,10 +20,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef _INCL_DUKEWIN_H_
-#define _INCL_DUKEWIN_H_ 1
+#pragma once
 
-#pragma warning(disable:4761)
+#pragma warning(disable : 4761)
 
 #ifdef _DEBUG
 #define STUBBED(x) printf("STUB: %s in %s:%d\n", x, __FILE__, __LINE__)
@@ -38,21 +37,19 @@
 #include <io.h>
 #include <assert.h>
 
-struct find_t
-{
-	int32_t handle;
+struct find_t {
+    int32_t handle;
     struct _finddata_t data;
-	uint8_t  name[MAX_PATH];
+    uint8_t name[MAX_PATH];
 };
-int _dos_findfirst(uint8_t  *filename, int x, struct find_t *f);
-int _dos_findnext(struct find_t *f);
+int _dos_findfirst(uint8_t* filename, int x, struct find_t* f);
+int _dos_findnext(struct find_t* f);
 
-struct dosdate_t
-{
-    uint8_t  day;
-    uint8_t  month;
+struct dosdate_t {
+    uint8_t day;
+    uint8_t month;
     unsigned int year;
-    uint8_t  dayofweek;
+    uint8_t dayofweek;
 };
 
 #ifndef min
@@ -66,20 +63,20 @@ struct dosdate_t
 // 64 megs should be enough for anybody.  :)  --ryan.
 #define Z_AvailHeap() ((64 * 1024) * 1024)
 
-#define printchrasm(x,y,ch) printf("%c", (uint8_t ) (ch & 0xFF))
+#define printchrasm(x, y, ch) printf("%c", (uint8_t) (ch & 0xFF))
 
 #define cdecl
 
-#define open _open
+#define open     _open
 #define O_BINARY _O_BINARY
 #define O_RDONLY _O_RDONLY
 #define O_WRONLY _O_WRONLY
-#define O_RDWR _O_RDWR
-#define O_TRUNC _O_TRUNC
-#define O_CREAT _O_CREAT
-#define S_IREAD _S_IREAD
+#define O_RDWR   _O_RDWR
+#define O_TRUNC  _O_TRUNC
+#define O_CREAT  _O_CREAT
+#define S_IREAD  _S_IREAD
 #define S_IWRITE _S_IWRITE
-#define S_IRDWR _S_IRDWR
+#define S_IRDWR  _S_IRDWR
 
 #define S_IRUSR S_IREAD
 #define S_IWUSR S_IWRITE
@@ -89,5 +86,3 @@ struct dosdate_t
 #define F_OK 0
 
 #define HAVE_PRAGMA_PACK 1
-
-#endif

@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
 
 #include "duke3d.h"
 
@@ -78,5 +77,3 @@ void P_CheckWeapons(player_t* p);
 void P_ProcessInput(short snum);
 
 void P_ComputerGetInput(int32_t snum, input* syn);
-
-#endif

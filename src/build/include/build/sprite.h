@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef BUILD_SPRITE_H
-#define BUILD_SPRITE_H
+#pragma once
 
 #include "build/build.h"
 
@@ -75,5 +74,3 @@ int B_ChangeSpriteSect(short spritenum, short newsectnum);
 int B_ChangeSpriteStat(short spritenum, short newstatnum);
 
 void B_InitSpriteLists(void);
-
-#endif

@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef ACTORS_H
-#define ACTORS_H
+#pragma once
 
 #include "duke3d.h"
 #include "types.h"
@@ -126,5 +125,3 @@ void P_MoveExplosions(void);
 void P_MoveEffectors(void);
 
 extern short otherp;
-
-#endif

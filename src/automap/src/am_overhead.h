@@ -20,11 +20,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef AM_OVERHEAD_H
-#define AM_OVERHEAD_H
+#pragma once
 
 #include "types.h"
 
 void AM_DrawOverhead(i32 posx, i32 posy, i32 zoom, i16 ang);
-
-#endif

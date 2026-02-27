@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef NAMES_H
-#define NAMES_H
+#pragma once
 
 #define SECTOREFFECTOR     1
 #define ACTIVATOR          2
@@ -750,5 +749,3 @@
 #define SIGN1               4909
 #define SIGN2               4912
 #define JURYGUY             4943
-
-#endif

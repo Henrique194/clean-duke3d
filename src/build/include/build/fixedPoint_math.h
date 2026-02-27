@@ -5,8 +5,7 @@
  * This file has been modified from Ken Silverman's original release
  */
 
-#ifndef __PRAGMAS_H__
-#define __PRAGMAS_H__
+#pragma once
 
 #include "build/platform.h"
 #include "types.h"
@@ -218,5 +217,3 @@ void copybufbyte(void* src, void* dest, i32 count);
 
 void qinterpolatedown16(int32_t* bufptr, int32_t num, int32_t val, int32_t add);
 void qinterpolatedown16short(int32_t* bufptr, int32_t num, int32_t val, int32_t add);
-
-#endif

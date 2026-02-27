@@ -26,6 +26,7 @@
 #include "build/engine.h"
 #include "soundefs.h"
 #include "audiolib/sounds.h"
+#include "con/con.h"
 #include "premap.h"
 #include "funct.h"
 

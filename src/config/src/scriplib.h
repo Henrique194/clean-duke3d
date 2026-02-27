@@ -22,8 +22,7 @@
 
 // scriplib.h
 
-#ifndef _scriplib_public
-#define _scriplib_public
+#pragma once
 
 #include "types.h"
 
@@ -34,7 +33,7 @@
 =
 ==============
 */
-int32 SCRIPT_Init(uint8_t* name);
+i32 SCRIPT_Init(u8* name);
 
 
 /*
@@ -44,7 +43,7 @@ int32 SCRIPT_Init(uint8_t* name);
 =
 ==============
 */
-void SCRIPT_Free(int32 scripthandle);
+void SCRIPT_Free(i32 scripthandle);
 
 /*
 ==============
@@ -53,8 +52,7 @@ void SCRIPT_Free(int32 scripthandle);
 =
 ==============
 */
-
-int32 SCRIPT_Parse(uint8_t* data, int32 length, char* name);
+i32 SCRIPT_Parse(u8* data, i32 length, char* name);
 
 
 /*
@@ -64,8 +62,7 @@ int32 SCRIPT_Parse(uint8_t* data, int32 length, char* name);
 =
 ==============
 */
-
-int32 SCRIPT_Load(char* filename);
+i32 SCRIPT_Load(char* filename);
 
 /*
 ==============
@@ -74,7 +71,7 @@ int32 SCRIPT_Load(char* filename);
 =
 ==============
 */
-void SCRIPT_Save(int32 scripthandle, char* filename);
+void SCRIPT_Save(i32 scripthandle, char* filename);
 
 
 /*
@@ -84,8 +81,7 @@ void SCRIPT_Save(int32 scripthandle, char* filename);
 =
 ==============
 */
-
-int32 SCRIPT_NumberSections(int32 scripthandle);
+i32 SCRIPT_NumberSections(i32 scripthandle);
 
 /*
 ==============
@@ -94,8 +90,7 @@ int32 SCRIPT_NumberSections(int32 scripthandle);
 =
 ==============
 */
-
-uint8_t* SCRIPT_Section(int32 scripthandle, int32 which);
+u8* SCRIPT_Section(i32 scripthandle, i32 which);
 
 /*
 ==============
@@ -104,8 +99,7 @@ uint8_t* SCRIPT_Section(int32 scripthandle, int32 which);
 =
 ==============
 */
-
-int32 SCRIPT_NumberEntries(int32 scripthandle, char* sectionname);
+i32 SCRIPT_NumberEntries(i32 scripthandle, char* sectionname);
 
 /*
 ==============
@@ -114,8 +108,7 @@ int32 SCRIPT_NumberEntries(int32 scripthandle, char* sectionname);
 =
 ==============
 */
-
-char* SCRIPT_Entry(int32 scripthandle, char* sectionname, int32 which);
+char* SCRIPT_Entry(i32 scripthandle, char* sectionname, i32 which);
 
 
 /*
@@ -125,7 +118,7 @@ char* SCRIPT_Entry(int32 scripthandle, char* sectionname, int32 which);
 =
 ==============
 */
-char* SCRIPT_GetRaw(int32 scripthandle, char* sectionname, char* entryname);
+char* SCRIPT_GetRaw(i32 scripthandle, char* sectionname, char* entryname);
 
 /*
 ==============
@@ -135,10 +128,11 @@ char* SCRIPT_GetRaw(int32 scripthandle, char* sectionname, char* entryname);
 ==============
 */
 void SCRIPT_GetString(
-    int32 scripthandle,
+    i32 scripthandle,
     char* sectionname,
     char* entryname,
-char* dest);
+    char* dest
+);
 
 /*
 ==============
@@ -148,7 +142,7 @@ char* dest);
 ==============
 */
 void SCRIPT_GetDoubleString(
-    int32 scripthandle,
+    i32 scripthandle,
     char* sectionname,
     char* entryname,
     char* dest1,
@@ -163,10 +157,10 @@ void SCRIPT_GetDoubleString(
 ==============
 */
 boolean SCRIPT_GetNumber(
-    int32 scripthandle,
+    i32 scripthandle,
     char* sectionname,
     char* entryname,
-    int32* number
+    i32* number
 );
 
 /*
@@ -177,9 +171,9 @@ boolean SCRIPT_GetNumber(
 ==============
 */
 void SCRIPT_GetBoolean(
-    int32 scripthandle,
-    uint8_t* sectionname,
-    uint8_t* entryname,
+    i32 scripthandle,
+    u8* sectionname,
+    u8* entryname,
     boolean* b
 );
 
@@ -190,9 +184,8 @@ void SCRIPT_GetBoolean(
 =
 ==============
 */
-
 boolean SCRIPT_GetFloat(
-    int32 scripthandle,
+    i32 scripthandle,
     char* sectionname,
     char* entryname,
     float* floatnumber
@@ -206,9 +199,8 @@ boolean SCRIPT_GetFloat(
 =
 ==============
 */
-
 void SCRIPT_GetDouble(
-    int32 scripthandle,
+    i32 scripthandle,
     char* sectionname,
     char* entryname,
     double* number
@@ -223,9 +215,9 @@ void SCRIPT_GetDouble(
 ==============
 */
 void SCRIPT_PutComment(
-    int32 scripthandle,
-    uint8_t* sectionname,
-    uint8_t* comment
+    i32 scripthandle,
+    u8* sectionname,
+    u8* comment
 );
 
 /*
@@ -235,7 +227,7 @@ void SCRIPT_PutComment(
 =
 ==============
 */
-void SCRIPT_PutEOL(int32 scripthandle, uint8_t* sectionname);
+void SCRIPT_PutEOL(i32 scripthandle, u8* sectionname);
 
 /*
 ==============
@@ -245,9 +237,9 @@ void SCRIPT_PutEOL(int32 scripthandle, uint8_t* sectionname);
 ==============
 */
 void SCRIPT_PutMultiComment(
-    int32 scripthandle,
-    uint8_t* sectionname,
-    uint8_t* comment,
+    i32 scripthandle,
+    u8* sectionname,
+    u8* comment,
     ...
 );
 
@@ -258,7 +250,7 @@ void SCRIPT_PutMultiComment(
 =
 ==============
 */
-void SCRIPT_PutSection(int32 scripthandle, uint8_t* sectionname);
+void SCRIPT_PutSection(i32 scripthandle, u8* sectionname);
 
 /*
 ==============
@@ -268,10 +260,10 @@ void SCRIPT_PutSection(int32 scripthandle, uint8_t* sectionname);
 ==============
 */
 void SCRIPT_PutRaw(
-    int32 scripthandle,
-    uint8_t* sectionname,
-    uint8_t* entryname,
-    uint8_t* raw
+    i32 scripthandle,
+    u8* sectionname,
+    u8* entryname,
+    u8* raw
 );
 
 /*
@@ -282,7 +274,7 @@ void SCRIPT_PutRaw(
 ==============
 */
 void SCRIPT_PutString(
-    int32 scripthandle,
+    i32 scripthandle,
     char* sectionname,
     char* entryname,
     char* string
@@ -296,7 +288,7 @@ void SCRIPT_PutString(
 ==============
 */
 void SCRIPT_PutDoubleString(
-    int32 scripthandle,
+    i32 scripthandle,
     char* sectionname,
     char* entryname,
     char* string1,
@@ -311,10 +303,10 @@ void SCRIPT_PutDoubleString(
 ==============
 */
 void SCRIPT_PutNumber(
-    int32 scripthandle,
+    i32 scripthandle,
     char* sectionname,
     char* entryname,
-    int32 number,
+    i32 number,
     boolean hexadecimal,
     boolean defaultvalue
 );
@@ -327,9 +319,9 @@ void SCRIPT_PutNumber(
 ==============
 */
 void SCRIPT_PutBoolean(
-    int32 scripthandle,
-    uint8_t* sectionname,
-    uint8_t* entryname,
+    i32 scripthandle,
+    u8* sectionname,
+    u8* entryname,
     boolean b
 );
 
@@ -340,14 +332,10 @@ void SCRIPT_PutBoolean(
 =
 ==============
 */
-
 void SCRIPT_PutDouble(
-    int32 scripthandle,
-    uint8_t* sectionname,
-    uint8_t* entryname,
+    i32 scripthandle,
+    u8* sectionname,
+    u8* entryname,
     double number,
     boolean defaultvalue
 );
-
-
-#endif

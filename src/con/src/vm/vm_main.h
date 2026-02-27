@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef CON_VM_H
-#define CON_VM_H
+#pragma once
 
 #include "duke3d.h"
 #include "types.h"
@@ -70,7 +69,3 @@ bool VM_Dodge(spritetype* spr);
 void move(con_vm_t* vm);
 
 bool parse(con_vm_t* vm);
-
-void execute(short i, short p, i32 x);
-
-#endif

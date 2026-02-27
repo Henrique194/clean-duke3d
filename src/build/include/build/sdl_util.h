@@ -144,8 +144,7 @@ inline static void set_sdl_scancodes(uint32_t scancodes[], size_t size) {
     scancodes[SDL_SCANCODE_KP_ENTER] = 0xE01C;
     scancodes[SDL_SCANCODE_RCTRL] = 0xE01D;
     scancodes[SDL_SCANCODE_KP_DIVIDE] = 0xE035;
-    scancodes[SDL_SCANCODE_PRINTSCREEN] =
-        0xE037;                              /* SBF - technically incorrect */
+    scancodes[SDL_SCANCODE_PRINTSCREEN] = 0xE037; /* SBF - technically incorrect */
     scancodes[SDL_SCANCODE_SYSREQ] = 0xE037; /* SBF - for windows... */
     scancodes[SDL_SCANCODE_RALT] = 0xE038;
     scancodes[SDL_SCANCODE_HOME] = 0xE047;

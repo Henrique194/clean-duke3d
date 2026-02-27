@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef CON_TOKEN_H
-#define CON_TOKEN_H
+#pragma once
 
 #include "com_main.h"
 #include "com_keyword.h"
@@ -32,5 +31,3 @@
 con_keyword_t COM_ParseCmd(con_compiler_t* ctx);
 
 void COM_ParseFile(con_compiler_t* ctx);
-
-#endif

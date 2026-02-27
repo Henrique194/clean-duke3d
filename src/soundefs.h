@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef SOUNDEFS_H
-#define SOUNDEFS_H
+#pragma once
 
 #include "names.h"
 
@@ -503,5 +502,3 @@
 #define SMACKIT             394
 #define BELLSND             395
 // MAXIMUM NUMBER OF SOUNDS: 450 ( 0-449 )
-
-#endif

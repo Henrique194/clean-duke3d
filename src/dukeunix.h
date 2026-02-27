@@ -20,9 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef Duke3D_dukeunix_h
-#define Duke3D_dukeunix_h
-
+#pragma once
 
 #define cdecl
 #define __far
@@ -102,5 +100,3 @@ struct dosdate_t
 #define mkdir(X) mkdir(X,0777)
 
 #define getch getchar
-
-#endif

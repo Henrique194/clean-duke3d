@@ -28,8 +28,7 @@
 //
 //****************************************************************************
 
-#ifndef _gamedefs_public_
-#define _gamedefs_public_
+#pragma once
 
 #include "con/con.h"
 
@@ -123,7 +122,3 @@ void makeitfall(short i);
 void CON_LoadFile(char* file, int read_grp);
 
 short furthestangle(short i, short angs);
-
-void execute(short i, short p, int32_t x);
-
-#endif

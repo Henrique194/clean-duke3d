@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef CVARDEFS_H
-#define CVARDEFS_H
+#pragma once
 
 #include <inttypes.h>
 
@@ -57,5 +56,3 @@ extern uint32_t sounddebugDeallocateSoundCalls;
 
 
 extern int g_CV_CubicInterpolation;
-
-#endif

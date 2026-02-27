@@ -5,8 +5,7 @@
  * This file has been modified from Ken Silverman's original release
  */
 
-#ifndef Duke3D_macos_compat_h
-#define Duke3D_macos_compat_h
+#pragma once
 
 #include <stdlib.h>
 
@@ -36,5 +35,3 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
-
-#endif

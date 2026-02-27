@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef CON_COMPILER_H
-#define CON_COMPILER_H
+#pragma once
 
 #include "types.h"
 
@@ -67,5 +66,3 @@ typedef struct {
 void COM_Error(const char* fmt, ...);
 
 void COM_Warn(const char* fmt, ...);
-
-#endif

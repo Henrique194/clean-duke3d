@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef FUNCT_H
-#define FUNCT_H
+#pragma once
 
 #include "duke3d.h"
 #include "audiolib/sounds.h"
@@ -161,5 +160,3 @@ int HU_MiniTextShade(int x, int y, const char* text, u8 shade, u8 pal, u8 stat);
 extern int32_t quotebot;
 extern int32_t quotebotgoal;
 extern char fta_quotes[NUMOFFIRSTTIMEACTIVE][64];
-
-#endif

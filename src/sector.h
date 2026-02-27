@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef SECTOR_H
-#define SECTOR_H
+#pragma once
 
 #include "duke3d.h"
 
@@ -89,5 +88,3 @@ void P_AlignWarpElevators(void);
 void P_CheatKeys(short snum);
 
 void P_CheckSectors(short snum);
-
-#endif

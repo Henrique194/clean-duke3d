@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef _INCL_DUKE3D_H_
-#define _INCL_DUKE3D_H_
+#pragma once
 
 #include "build/build.h"
 
@@ -903,5 +902,3 @@ extern int32_t myaimstat;
 extern int32_t omyaimstat;
 
 extern uint8_t nHostForceDisableAutoaim;
-
-#endif // include-once header.

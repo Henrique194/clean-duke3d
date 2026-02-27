@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef VID_PALETTE_H
-#define VID_PALETTE_H
+#pragma once
 
 #include "build/platform.h"
 
@@ -49,5 +48,3 @@ void VID_MakePalLookup(
 );
 
 void VID_SetBrightness(uint8_t brightness, const uint8_t* pal);
-
-#endif

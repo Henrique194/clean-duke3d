@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef VID_DISPLAY_H
-#define VID_DISPLAY_H
+#pragma once
 
 #include "build/platform.h"
 #include "mode.h"
@@ -61,8 +60,7 @@ extern uint8_t permanentlock;
 extern int32_t FullScreen; // defined in Game\src\config.c
 
 /* these need to be implemented by YOUR driver. */
-void _platform_init(int argc, char** argv, const char* title,
-                    const char* iconName);
+void _platform_init(int argc, char** argv, const char* title, const char* iconName);
 void _idle(void);
 void _handle_events(void);
 void initkeys(void);
@@ -86,5 +84,3 @@ void readmousexy(short* x, short* y);
 void readmousebstatus(short* bstatus);
 void keyhandler(void);
 uint8_t _readlastkeyhit(void);
-
-#endif

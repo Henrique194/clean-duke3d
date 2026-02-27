@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef _control_public
-#define _control_public
+#pragma once
 
 #include "types.h"
 #include "gamedefs.h"
@@ -118,5 +117,3 @@ void CONTROL_ClearAction(int32 whichbutton);
 void CONTROL_Startup(void);
 
 void CONTROL_Shutdown(void);
-
-#endif

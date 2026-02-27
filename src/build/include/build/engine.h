@@ -5,8 +5,7 @@
  * This file IS NOT A PART OF Ken Silverman's original release
  */
 
-#ifndef _INCLUDE_ENGINE_H_
-#define _INCLUDE_ENGINE_H_
+#pragma once
 
 #include <stdint.h>
 #include "renderer/renderer.h"
@@ -119,5 +118,3 @@ extern int32_t pow2long[32];
 extern int32_t artsize;
 extern int32_t tilefileoffs[MAXTILES];
 extern int32_t totalclocklock;
-
-#endif

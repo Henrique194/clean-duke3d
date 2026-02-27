@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef MOUSE_H
-#define MOUSE_H
+#pragma once
 
 #include "control.h"
 
@@ -65,6 +64,4 @@ void CONTROL_MapDigitalAxis(
     int32 whichaxis,
     int32 whichfunction,
     int32 direction
-    );
-
-#endif
+);

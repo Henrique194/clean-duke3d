@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef CON_KEYWORD_H
-#define CON_KEYWORD_H
+#pragma once
 
 #include "com_main.h"
 #include "types.h"
@@ -151,5 +150,3 @@ bool COM_IsKeyword(const char* str);
 con_keyword_t COM_LexKeyword(con_compiler_t* ctx);
 
 i32 COM_PeekKeyword(const con_compiler_t* ctx);
-
-#endif

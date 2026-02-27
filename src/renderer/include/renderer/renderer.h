@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef RENDERER_H
-#define RENDERER_H
+#pragma once
 
 #include "types.h"
 #include "build/build.h"
@@ -199,5 +198,3 @@ extern i16 uwall[MAXXDIM + 1];
 extern i16 dwall[MAXXDIM + 1];
 extern u8 globalpolytype;
 extern pv_wall_t pv_walls[MAXWALLSB];
-
-#endif

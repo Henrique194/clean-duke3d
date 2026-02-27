@@ -21,8 +21,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef DRAW_H
-#define DRAW_H
+#pragma once
 
 #include <stdint.h>
 
@@ -134,7 +133,6 @@ int32_t vlineasm1(
     uint8_t* dest
 );
 
-
 int32_t tvlineasm1(
     int32_t i1,
     const uint8_t* texture,
@@ -155,25 +153,61 @@ void tvlineasm2(
     uintptr_t i6
 );
 
-int32_t mvlineasm1(int32_t, const uint8_t*, int32_t, int32_t,
-                   const uint8_t* texture, uint8_t* dest);
+int32_t mvlineasm1(
+    int32_t,
+    const uint8_t*,
+    int32_t,
+    int32_t,
+    const uint8_t* texture,
+    uint8_t* dest
+);
+
 void setupvlineasm(int32_t);
+
 void vlineasm4(int32_t, uint8_t*);
+
 void setupmvlineasm(int32_t);
+
 void mvlineasm4(int32_t, uint8_t*);
-void tsetupspritevline(const uint8_t*, int32_t, int32_t, int32_t, int32_t);
-void DrawSpriteVerticalLine(int32_t, int32_t, uint32_t, const uint8_t*,
-                            uint8_t*);
+
+void tsetupspritevline(
+    const uint8_t*,
+    int32_t,
+    int32_t,
+    int32_t,
+    int32_t
+);
+
+void DrawSpriteVerticalLine(
+    int32_t,
+    int32_t,
+    uint32_t,
+    const uint8_t*,
+    uint8_t*
+);
+
 void mhline(uint8_t*, int32_t, int32_t, int32_t, int32_t, uint8_t*);
+
 void mhlineskipmodify(uint32_t, int32_t, int32_t, uint8_t*);
+
 void msethlineshift(int32_t, int32_t);
+
 void thline(uint8_t*, int32_t, int32_t, int32_t, int32_t, uint8_t*);
+
 void thlineskipmodify(int32_t, uint32_t, uint32_t, int32_t, int32_t, uint8_t*);
+
 void tsethlineshift(int32_t, int32_t);
+
 void setupslopevlin(int32_t, intptr_t, int32_t);
-void slopevlin(intptr_t, uint32_t, intptr_t*, uint32_t, int32_t, int32_t,
-               int32_t);
+
+void slopevlin(
+    intptr_t,
+    uint32_t,
+    intptr_t*,
+    uint32_t,
+    int32_t,
+    int32_t,
+    int32_t
+);
 
 void settrans(int32_t type);
-
-#endif

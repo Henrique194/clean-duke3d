@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef VID_MODE_H
-#define VID_MODE_H
+#pragma once
 
 #include "build/platform.h"
 
@@ -42,5 +41,3 @@ void VID_SetMode(int mode);
 // resolution inits. sdl_driver.c ...
 //
 int32_t VID_SetGameMode(int32_t daxdim, int32_t daydim);
-
-#endif

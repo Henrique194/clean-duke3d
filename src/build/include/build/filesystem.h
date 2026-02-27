@@ -5,8 +5,7 @@
  * This file has been modified from Ken Silverman's original release
  */
 
-#ifndef Duke3D_filesystem_h
-#define Duke3D_filesystem_h
+#pragma once
 
 #include <stdint.h>
 #include <stdio.h>
@@ -42,6 +41,4 @@ int32_t TCkopen4load(const char* filename, int32_t readfromGRP);
 
 #if defined(__APPLE__) || defined(__linux__)
 int32_t filelength(int32_t fd);
-#endif
-
 #endif

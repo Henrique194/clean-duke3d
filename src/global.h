@@ -20,12 +20,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef Duke3D_global_h
-#define Duke3D_global_h
+#pragma once
 
 #include "types.h"
 
-enum { filetype_binary, filetype_text };
+enum {
+    filetype_binary,
+    filetype_text,
+};
 
 
 int FindDistance3D(int ix, int iy, int iz);
@@ -87,5 +89,3 @@ void SafeRealloc(void** ptr, int32 newsize);
 
 extern int32 _argc;
 extern char** _argv;
-
-#endif

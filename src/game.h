@@ -20,11 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef _GAME_H_
-#define _GAME_H_
+#pragma once
 
-//extern uint8_t  game_dir[512];
-char * getgamedir();
-
-#endif  // include-once header.
-
+// extern uint8_t game_dir[512];
+char* getgamedir();

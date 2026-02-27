@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef MENUS_H
-#define MENUS_H
+#pragma once
 
 #include "duke3d.h"
 #include "audiolib/sounds.h"
@@ -71,5 +70,3 @@ void menus(void);
 void palto(uint8_t r, uint8_t g, uint8_t b, int32_t e, int present);
 
 void playanm(char* fn, uint8_t);
-
-#endif

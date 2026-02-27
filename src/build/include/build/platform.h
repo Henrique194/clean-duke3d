@@ -5,8 +5,7 @@
  * This file has been modified from Ken Silverman's original release
  */
 
-#ifndef _INCLUDE_PLATFORM_H_
-#define _INCLUDE_PLATFORM_H_
+#pragma once
 
 #include <SDL.h>
 #include <stdint.h>
@@ -23,5 +22,3 @@
 
 #define BUILDSWAP_INTEL16 SDL_SwapLE16
 #define BUILDSWAP_INTEL32 SDL_SwapLE32
-
-#endif

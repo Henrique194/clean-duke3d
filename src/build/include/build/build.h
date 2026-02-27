@@ -5,8 +5,7 @@
  * This file has been modified from Ken Silverman's original release
  */
 
-#ifndef _INCLUDE_BUILD_H_
-#define _INCLUDE_BUILD_H_
+#pragma once
 
 #include <inttypes.h>
 #include "types.h"
@@ -465,7 +464,3 @@ int FindDistance2D(int ix, int iy);
 
 #include "build/sprite.h"
 
-
-#endif /* defined _INCLUDE_BUILD_H_ */
-
-/* end of build.h ... */

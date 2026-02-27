@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef CON_OPS_H
-#define CON_OPS_H
+#pragma once
 
 #include "vm_main.h"
 
@@ -214,5 +213,3 @@ void VM_IfSpritePal(con_vm_t* vm);
 void VM_IfAngDiffLt(con_vm_t* vm);
 
 void VM_IfNoSounds(con_vm_t* vm);
-
-#endif

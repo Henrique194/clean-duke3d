@@ -31,13 +31,9 @@
    (c) Copyright 1994 James R. Dose.  All Rights Reserved.
 **********************************************************************/
 
-#ifndef __SNDCARDS_H
-#define __SNDCARDS_H
+#pragma once
 
-typedef enum
-{
+typedef enum {
     SC_SoundScape,
-    SC_Unknown
+    SC_Unknown,
 } soundcardnames;
-
-#endif

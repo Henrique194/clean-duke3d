@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef CONSOLE_H
-#define CONSOLE_H
+#pragma once
 
 void CLS_Init(void);
 
@@ -51,5 +50,3 @@ char* CLS_GetArgv(unsigned int var);
 int CLS_IsActive(void);
 
 void CLS_Hide(void);
-
-#endif

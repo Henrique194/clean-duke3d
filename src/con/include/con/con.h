@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef CON_H
-#define CON_H
+#pragma once
 
 #include "types.h"
 
@@ -31,4 +30,4 @@ i32 CON_EncodeScript(const i32* scptr);
 
 i32* CON_DecodeScript(i32 scptr);
 
-#endif
+void execute(short i, short p, i32 x);

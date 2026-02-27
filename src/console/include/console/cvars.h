@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef CVARS_H
-#define CVARS_H
+#pragma once
 
 #define REGCONVAR(varname, varhelp, variable, function)                        \
     CVAR_RegisterCvar(varname, varhelp, &variable, &function)
@@ -58,5 +57,3 @@ void CVAR_Render();
 // matches the given name. This function is case-insensitive.
 //
 cvar_t* CVAR_FindVar(const char* name);
-
-#endif

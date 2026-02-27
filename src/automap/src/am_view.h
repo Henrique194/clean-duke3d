@@ -20,11 +20,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef AM_VIEW_H
-#define AM_VIEW_H
+#pragma once
 
 #include "types.h"
 
 void AM_DrawMapView(i32 x, i32 y, i32 zoom, i16 ang);
-
-#endif

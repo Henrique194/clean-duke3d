@@ -31,19 +31,15 @@
    (c) Copyright 1994 James R. Dose.  All Rights Reserved.
 **********************************************************************/
 
-#ifndef __PITCH_H
-#define __PITCH_H
+#pragma once
 
 #include "duke3d.h"
 
-enum PITCH_ERRORS
-   {
-   PITCH_Warning = -2,
-   PITCH_Error = -1,
-   PITCH_Ok = 0,
-   };
+enum PITCH_ERRORS {
+    PITCH_Warning = -2,
+    PITCH_Error = -1,
+    PITCH_Ok = 0,
+};
 
-//void          PITCH_Init( void );
-uint32_t PITCH_GetScale( int pitchoffset );
-
-#endif
+// void PITCH_Init(void);
+uint32_t PITCH_GetScale(int pitchoffset);

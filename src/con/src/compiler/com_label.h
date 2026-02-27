@@ -20,8 +20,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef CON_LABEL_H
-#define CON_LABEL_H
+#pragma once
 
 #include "com_main.h"
 
@@ -30,5 +29,3 @@ int COM_GetLabel(const con_compiler_t* ctx, const char* str);
 bool COM_IsLabel(const con_compiler_t* ctx, const char* str);
 
 const char* COM_LexLabel(con_compiler_t* ctx);
-
-#endif

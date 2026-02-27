@@ -5,8 +5,7 @@
  * This file IS NOT A PART OF Ken Silverman's original release
  */
 
-#ifndef TIMER_H
-#define TIMER_H
+#pragma once
 
 #include "build/platform.h"
 
@@ -20,5 +19,3 @@ void uninittimer(void);
 void sampletimer(void);
 
 uint32_t getticks(void);
-
-#endif

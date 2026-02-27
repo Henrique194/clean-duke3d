@@ -31,17 +31,14 @@
    (c) Copyright 1994 James R. Dose.  All Rights Reserved.
 **********************************************************************/
 
-#ifndef __DPMI_H
-#define __DPMI_H
+#pragma once
 
-enum DPMI_Errors
-   {
-   DPMI_Warning = -2,
-   DPMI_Error   = -1,
-   DPMI_Ok      = 0
-   };
+enum DPMI_Errors {
+    DPMI_Warning = -2,
+    DPMI_Error = -1,
+    DPMI_Ok = 0,
+};
 
-int  DPMI_GetDOSMemory( void **ptr, void **descriptor, unsigned length );
-int  DPMI_FreeDOSMemory( void *descriptor );
+int DPMI_GetDOSMemory(void** ptr, void** descriptor, unsigned length);
 
-#endif
+int DPMI_FreeDOSMemory(void* descriptor);

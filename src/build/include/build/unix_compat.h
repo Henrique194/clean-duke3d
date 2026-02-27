@@ -5,8 +5,7 @@
  * This file has been modified from Ken Silverman's original release
  */
 
-#ifndef Duke3D_unix_compat_h
-#define Duke3D_unix_compat_h
+#pragma once
 
 //#define BYTE_ORDER LITTLE_ENDIAN
 
@@ -42,5 +41,3 @@
 #include <fcntl.h>
 #include <dirent.h>
 #include <string.h>
-
-#endif

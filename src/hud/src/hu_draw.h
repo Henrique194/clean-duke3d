@@ -20,11 +20,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#ifndef HUD_DRAW_H
-#define HUD_DRAW_H
+#pragma once
 
 #include <stdint.h>
 
 void HUD_Draw(int32_t smooth_ratio);
-
-#endif

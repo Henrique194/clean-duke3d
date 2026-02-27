@@ -14,17 +14,18 @@
  * This file has been modified from Ken Silverman's original release
  */
 
-#ifndef CACHE_H
-#define CACHE_H
+#pragma once
 
 #include <stdint.h>
 
 void initcache(uint8_t* dacachestart, int32_t dacachesize);
+
 void allocache(uint8_t* * newhandle, int32_t newbytes, uint8_t* newlockptr);
+
 void suckcache(int32_t* suckptr);
+
 void agecache(void);
+
 void reportandexit(char* errormessage);
+
 void caches(void);
-
-
-#endif
