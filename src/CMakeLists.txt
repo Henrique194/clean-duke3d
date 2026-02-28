@@ -36,6 +36,7 @@ set(LIBS
     input
     memory
     menu
+    physics
     renderer
     rts
     video

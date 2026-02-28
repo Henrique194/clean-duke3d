@@ -22,18 +22,13 @@
  */
 // movement collision code
 
-
-#if WIN32
-#include "io.h"
-#endif
-
-#include <fcntl.h>
-#include <math.h>
-#include <sys/types.h>
-#include "build/platform.h"
+#include "physics/physics.h"
 #include "build/build.h"
 #include "build/engine.h"
 #include "build/tiles.h"
+#if WIN32
+#include "io.h"
+#endif
 
 
 #define MAXCLIPNUM 512
@@ -51,74 +46,75 @@
 
 
 typedef struct {
-    int32_t x1;
-    int32_t y1;
-    int32_t x2;
-    int32_t y2;
+    i32 x1;
+    i32 y1;
+    i32 x2;
+    i32 y2;
 } linetype;
 
 
-extern int32_t rxi[8];
-extern int32_t ryi[8];
-extern int32_t rzi[8];
-extern int32_t rxi2[8];
-extern int32_t ryi2[8];
-extern int32_t rzi2[8];
-extern int32_t xsi[8];
-extern int32_t ysi[8];
+extern i32 rxi[8];
+extern i32 ryi[8];
+extern i32 rzi[8];
+extern i32 rxi2[8];
+extern i32 ryi2[8];
+extern i32 rzi2[8];
+extern i32 xsi[8];
+extern i32 ysi[8];
 
 
 static short editstatus = 0;
 
 static linetype clipit[MAXCLIPNUM];
-static short clipsectorlist[MAXCLIPNUM], clipsectnum;
+static short clipsectorlist[MAXCLIPNUM];
+static short clipsectnum;
 static short clipobjectval[MAXCLIPNUM];
 
-static int16_t clipnum;
-static int16_t hitwalls[4];
+static i16 clipnum;
+static i16 hitwalls[4];
 
-static int32_t hitscangoalx = (1 << 29) - 1;
-static int32_t hitscangoaly = (1 << 29) - 1;
+static i32 hitscangoalx = (1 << 29) - 1;
+static i32 hitscangoaly = (1 << 29) - 1;
 
 
 //
 // Line intersect.
-// Let l1 be the line segment defined by the points p1 = (x1, y1)
-// and p2 = (x2, y2). Let l2 be the line segment defined by the
-// points p3 = (x3, y3) and p4 = (x4, y4).
-// Then this function checks if l1 crosses l2.
+// If l1 be the line segment defined by the points p1 = (x1, y1)
+// and p2 = (x2, y2), and l2 be the line segment defined by the
+// points p3 = (x3, y3) and p4 = (x4, y4), Then this function
+// checks if l1 crosses l2.
 //
 static int lintersect(
-    int32_t x1,
-    int32_t y1,
-    int32_t z1,
-    int32_t x2,
-    int32_t y2,
-    int32_t z2,
-    int32_t x3,
-    int32_t y3,
-    int32_t x4,
-    int32_t y4,
-    int32_t* intx,
-    int32_t* inty,
-    int32_t* intz
+    i32 x1,
+    i32 y1,
+    i32 z1,
+    i32 x2,
+    i32 y2,
+    i32 z2,
+    i32 x3,
+    i32 y3,
+    i32 x4,
+    i32 y4,
+    i32* intx,
+    i32* inty,
+    i32* intz
 ) {
-    int32_t x21 = x2 - x1;
-    int32_t y21 = y2 - y1;
-    int32_t x34 = x3 - x4;
-    int32_t y34 = y3 - y4;
-    int32_t bot = x21 * y34 - y21 * x34;
+    i32 x21 = x2 - x1;
+    i32 y21 = y2 - y1;
+    i32 x34 = x3 - x4;
+    i32 y34 = y3 - y4;
+    i32 bot = x21 * y34 - y21 * x34;
     if (bot == 0) {
         return 0;
     }
-    int32_t x31 = x3 - x1;
-    int32_t y31 = y3 - y1;
-    int32_t topt = x31 * y34 - y31 * x34;
+    i32 x31 = x3 - x1;
+    i32 y31 = y3 - y1;
+    i32 topt = x31 * y34 - y31 * x34;
     if (bot > 0) {
         if (topt < 0 || topt >= bot) {
             return 0;
         }
-        int32_t topu = x21 * y31 - y21 * x31;
+        i32 topu = x21 * y31 - y21 * x31;
         if (topu < 0 || topu >= bot) {
             return 0;
         }
@@ -126,12 +122,12 @@ static int lintersect(
         if (topt > 0 || topt <= bot) {
             return 0;
         }
-        int32_t topu = x21 * y31 - y21 * x31;
+        i32 topu = x21 * y31 - y21 * x31;
         if (topu > 0 || topu <= bot) {
             return 0;
         }
     }
-    int32_t t = divscale24(topt, bot);
+    i32 t = divscale24(topt, bot);
     *intx = x1 + mulscale24(x21, t);
     *inty = y1 + mulscale24(y21, t);
     *intz = z1 + mulscale24(z2 - z1, t);
@@ -144,34 +140,34 @@ static int lintersect(
 // p1 towards p2 is a ray.
 //
 static int rintersect(
-    int32_t x1,
-    int32_t y1,
-    int32_t z1,
-    int32_t vx,
-    int32_t vy,
-    int32_t vz,
-    int32_t x3,
-    int32_t y3,
-    int32_t x4,
-    int32_t y4,
-    int32_t* intx,
-    int32_t* inty,
-    int32_t* intz
+    i32 x1,
+    i32 y1,
+    i32 z1,
+    i32 vx,
+    i32 vy,
+    i32 vz,
+    i32 x3,
+    i32 y3,
+    i32 x4,
+    i32 y4,
+    i32* intx,
+    i32* inty,
+    i32* intz
 ) {
-    int32_t x34 = x3 - x4;
-    int32_t y34 = y3 - y4;
-    int32_t bot = vx * y34 - vy * x34;
+    i32 x34 = x3 - x4;
+    i32 y34 = y3 - y4;
+    i32 bot = vx * y34 - vy * x34;
     if (bot == 0) {
         return 0;
     }
-    int32_t x31 = x3 - x1;
-    int32_t y31 = y3 - y1;
-    int32_t topt = x31 * y34 - y31 * x34;
+    i32 x31 = x3 - x1;
+    i32 y31 = y3 - y1;
+    i32 topt = x31 * y34 - y31 * x34;
     if (bot > 0) {
         if (topt < 0) {
             return 0;
         }
-        int32_t topu = vx * y31 - vy * x31;
+        i32 topu = vx * y31 - vy * x31;
         if (topu < 0 || topu >= bot) {
             return 0;
         }
@@ -179,12 +175,12 @@ static int rintersect(
         if (topt > 0) {
             return 0;
         }
-        int32_t topu = vx * y31 - vy * x31;
+        i32 topu = vx * y31 - vy * x31;
         if (topu > 0 || topu <= bot) {
             return 0;
         }
     }
-    int32_t t = divscale16(topt, bot);
+    i32 t = divscale16(topt, bot);
     *intx = x1 + mulscale16(vx, t);
     *inty = y1 + mulscale16(vy, t);
     *intz = z1 + mulscale16(vz, t);
@@ -192,9 +188,9 @@ static int rintersect(
 }
 
 
-static void keepaway(int32_t* x, int32_t* y, int32_t w) {
-    int32_t dx, dy, ox, oy, x1, y1;
-    uint8_t first;
+static void keepaway(i32* x, i32* y, i32 w) {
+    i32 dx, dy, ox, oy, x1, y1;
+    u8 first;
 
     x1 = clipit[w].x1;
     dx = clipit[w].x2 - x1;
@@ -215,9 +211,9 @@ static void keepaway(int32_t* x, int32_t* y, int32_t w) {
 }
 
 
-static int raytrace(int32_t x3, int32_t y3, int32_t* x4, int32_t* y4) {
-    int32_t x1, y1, x2, y2, bot, topu, nintx, ninty, cnt, z, hitwall;
-    int32_t x21, y21, x43, y43;
+static int raytrace(i32 x3, i32 y3, i32* x4, i32* y4) {
+    i32 x1, y1, x2, y2, bot, topu, nintx, ninty, cnt, z, hitwall;
+    i32 x21, y21, x43, y43;
 
     hitwall = -1;
     for (z = clipnum - 1; z >= 0; z--) {
@@ -268,15 +264,15 @@ static int raytrace(int32_t x3, int32_t y3, int32_t* x4, int32_t* y4) {
 
 
 static int clipinsideboxline(
-    int32_t x,
-    int32_t y,
-    int32_t x1,
-    int32_t y1,
-    int32_t x2,
-    int32_t y2,
-    int32_t walldist
+    i32 x,
+    i32 y,
+    i32 x1,
+    i32 y1,
+    i32 x2,
+    i32 y2,
+    i32 walldist
 ) {
-    int32_t r;
+    i32 r;
 
     r = (walldist << 1);
 
@@ -296,8 +292,9 @@ static int clipinsideboxline(
 
     x2 -= x1;
     y2 -= y1;
-    if (x2 * (walldist - y1) >= y2 * (walldist - x1)) /* Front */
+    if (x2 * (walldist - y1) >= y2 * (walldist - x1))
     {
+        // Front.
         if (x2 > 0)
             x2 *= (0 - y1);
         else
@@ -324,10 +321,10 @@ static int lastwall(short point) {
     if (point > 0 && wall[point - 1].point2 == point) {
         return point - 1;
     }
-    int32_t i = point;
-    int32_t cnt = MAXWALLS;
+    i32 i = point;
+    i32 cnt = MAXWALLS;
     do {
-        int32_t j = wall[i].point2;
+        i32 j = wall[i].point2;
         if (j == point) {
             return i;
         }
@@ -338,22 +335,31 @@ static int lastwall(short point) {
 }
 
 
-int clipmove(int32_t* x, int32_t* y, int32_t* z, short* sectnum,
-             int32_t xvect, int32_t yvect, int32_t walldist, int32_t ceildist,
-             int32_t flordist, uint32_t cliptype) {
-    /* !!! ugh...move this var into clipmove as a parameter, and update build2.txt! */
-    static int32_t clipmoveboxtracenum = 3;
+int PHYS_ClipMove(
+    i32* x,
+    i32* y,
+    i32* z,
+    short* sectnum,
+    i32 xvect,
+    i32 yvect,
+    i32 walldist,
+    i32 ceildist,
+    i32 flordist,
+    u32 cliptype
+) {
+    // !!! ugh...move this var into clipmove as a parameter, and update build2.txt!
+    static i32 clipmoveboxtracenum = 3;
 
     walltype *wal, *wal2;
     spritetype* spr;
     sectortype *sec, *sec2;
-    int32_t i, j, templong1, templong2;
-    int32_t oxvect, oyvect, goalx, goaly, intx, inty, lx, ly, retval;
-    int32_t k, l, clipsectcnt, startwall, endwall, cstat, dasect;
-    int32_t x1, y1, x2, y2, cx, cy, rad, xmin, ymin, xmax, ymax, daz, daz2;
-    int32_t bsz, dax, day, xoff, yoff, xspan, yspan, cosang, sinang, tilenum;
-    int32_t xrepeat, yrepeat, gx, gy, dx, dy, dasprclipmask, dawalclipmask;
-    int32_t hitwall, cnt, clipyou;
+    i32 i, j, templong1, templong2;
+    i32 oxvect, oyvect, goalx, goaly, intx, inty, lx, ly, retval;
+    i32 k, l, clipsectcnt, startwall, endwall, cstat, dasect;
+    i32 x1, y1, x2, y2, cx, cy, rad, xmin, ymin, xmax, ymax, daz, daz2;
+    i32 bsz, dax, day, xoff, yoff, xspan, yspan, cosang, sinang, tilenum;
+    i32 xrepeat, yrepeat, gx, gy, dx, dy, dasprclipmask, dawalclipmask;
+    i32 hitwall, cnt, clipyou;
 
     if (((xvect | yvect) == 0) || (*sectnum < 0))
         return (0);
@@ -370,7 +376,7 @@ int clipmove(int32_t* x, int32_t* y, int32_t* z, short* sectnum,
 
     cx = (((*x) + goalx) >> 1);
     cy = (((*y) + goaly) >> 1);
-    /* Extra walldist for sprites on sector lines */
+    // Extra walldist for sprites on sector lines.
     gx = goalx - (*x);
     gy = goaly - (*y);
     rad = ksqrt(gx * gx + gy * gy) + MAXCLIPDIST + walldist + 8;
@@ -379,8 +385,8 @@ int clipmove(int32_t* x, int32_t* y, int32_t* z, short* sectnum,
     xmax = cx + rad;
     ymax = cy + rad;
 
-    dawalclipmask = (cliptype & 65535); /* CLIPMASK0 = 0x00010001 */
-    dasprclipmask = (cliptype >> 16);   /* CLIPMASK1 = 0x01000040 */
+    dawalclipmask = (cliptype & 65535); // CLIPMASK0 = 0x00010001
+    dasprclipmask = (cliptype >> 16);   // CLIPMASK1 = 0x01000040
 
     clipsectorlist[0] = (*sectnum);
     clipsectcnt = 0;
@@ -409,7 +415,7 @@ int clipmove(int32_t* x, int32_t* y, int32_t* z, short* sectnum,
             dx = x2 - x1;
             dy = y2 - y1;
             if (dx * ((*y) - y1) < ((*x) - x1) * dy)
-                continue; /* If wall's not facing you */
+                continue; // If wall's not facing you.
 
             if (dx > 0)
                 dax = dx * (ymin - y1);
@@ -448,7 +454,7 @@ int clipmove(int32_t* x, int32_t* y, int32_t* z, short* sectnum,
             }
 
             if (clipyou) {
-                /* Add 2 boxes at endpoints */
+                // Add 2 boxes at endpoints.
                 bsz = walldist;
                 if (gx < 0)
                     bsz = -bsz;
@@ -496,7 +502,7 @@ int clipmove(int32_t* x, int32_t* y, int32_t* z, short* sectnum,
 
                         if (tiles[spr->picnum].anim_flags & 0x00ff0000)
                             daz -= (
-                                (int32_t) ((int8_t) (
+                                (i32) ((i8) (
                                     (tiles[spr->picnum].anim_flags >> 16) & 255))
                                 * spr->yrepeat << 2);
 
@@ -524,21 +530,19 @@ int clipmove(int32_t* x, int32_t* y, int32_t* z, short* sectnum,
                         daz = spr->z;
 
                     if (tiles[spr->picnum].anim_flags & 0x00ff0000)
-                        daz -= ((int32_t) ((int8_t) (
+                        daz -= ((i32) ((i8) (
                                     (tiles[spr->picnum].anim_flags >> 16) & 255))
                                 * spr->yrepeat << 2);
                     daz2 = daz - k;
                     daz += ceildist;
                     daz2 -= flordist;
                     if (((*z) < daz) && ((*z) > daz2)) {
-                        /*
-                         * These lines get the 2 points of the rotated sprite
-                         * Given: (x1, y1) starts out as the center point
-                         */
+                        // These lines get the 2 points of the rotated sprite
+                        // Given: (x1, y1) starts out as the center point
                         tilenum = spr->picnum;
-                        xoff = (int32_t) ((int8_t) (
+                        xoff = (i32) ((i8) (
                                    (tiles[tilenum].anim_flags >> 8) & 255)) + ((
-                                   int32_t) spr->xoffset);
+                                   i32) spr->xoffset);
                         if ((cstat & 4) > 0)
                             xoff = -xoff;
                         k = spr->ang;
@@ -560,7 +564,7 @@ int clipmove(int32_t* x, int32_t* y, int32_t* z, short* sectnum,
                                              walldist);
 
                             if ((x1 - (*x)) * (y2 - (*y)) >= (x2 - (*x)) * (
-                                    y1 - (*y))) /* Front */
+                                    y1 - (*y))) // Front
                             {
                                 addclipline(x1+dax, y1+day, x2+day, y2-dax,
                                             (short)j+49152);
@@ -571,7 +575,7 @@ int clipmove(int32_t* x, int32_t* y, int32_t* z, short* sectnum,
                                             (short)j+49152);
                             }
 
-                            /* Side blocker */
+                            // Side blocker
                             if ((x2 - x1) * ((*x) - x1) + (y2 - y1) * (
                                     (*y) - y1) < 0) {
                                 addclipline(x1-day, y1+dax, x1+dax, y1+day,
@@ -594,12 +598,12 @@ int clipmove(int32_t* x, int32_t* y, int32_t* z, short* sectnum,
                                 continue;
 
                         tilenum = spr->picnum;
-                        xoff = (int32_t) ((int8_t) (
+                        xoff = (i32) ((i8) (
                                    (tiles[tilenum].anim_flags >> 8) & 255)) + ((
-                                   int32_t) spr->xoffset);
-                        yoff = (int32_t) ((int8_t) (
+                                   i32) spr->xoffset);
+                        yoff = (i32) ((i8) (
                                    (tiles[tilenum].anim_flags >> 16) & 255)) + ((
-                                   int32_t) spr->yoffset);
+                                   i32) spr->yoffset);
                         if ((cstat & 4) > 0)
                             xoff = -xoff;
                         if ((cstat & 8) > 0)
@@ -699,7 +703,7 @@ int clipmove(int32_t* x, int32_t* y, int32_t* z, short* sectnum,
                 templong2 = dmulscale6(clipit[j].x2 - clipit[j].x1, oxvect,
                                        clipit[j].y2 - clipit[j].y1, oyvect);
                 if ((templong1 ^ templong2) < 0) {
-                    updatesector(*x, *y, sectnum);
+                    PHYS_UpdateSector(*x, *y, sectnum);
                     return (retval);
                 }
             }
@@ -719,7 +723,7 @@ int clipmove(int32_t* x, int32_t* y, int32_t* z, short* sectnum,
     } while (((xvect | yvect) != 0) && (hitwall >= 0) && (cnt > 0));
 
     for (j = 0; j < clipsectnum; j++)
-        if (inside(*x, *y, clipsectorlist[j]) == 1) {
+        if (PHYS_Inside(*x, *y, clipsectorlist[j]) == 1) {
             *sectnum = clipsectorlist[j];
             return (retval);
         }
@@ -727,7 +731,7 @@ int clipmove(int32_t* x, int32_t* y, int32_t* z, short* sectnum,
     *sectnum = -1;
     templong1 = 0x7fffffff;
     for (j = numsectors - 1; j >= 0; j--)
-        if (inside(*x, *y, j) == 1) {
+        if (PHYS_Inside(*x, *y, j) == 1) {
             if (sector[j].ceilingstat & 2)
                 templong2 = (getceilzofslope((short) j, *x, *y) - (*z));
             else
@@ -759,7 +763,7 @@ int clipmove(int32_t* x, int32_t* y, int32_t* z, short* sectnum,
 }
 
 
-int pushmove(
+int PHYS_PushMove(
     i32* x,
     i32* y,
     i32* z,
@@ -771,11 +775,11 @@ int pushmove(
 ) {
     sectortype *sec, *sec2;
     walltype* wal;
-    int32_t i, j, k, t, dx, dy, dax, day, daz, daz2, bad, dir;
-    //    int32_t dasprclipmask;
-    int32_t dawalclipmask;
+    i32 i, j, k, t, dx, dy, dax, day, daz, daz2, bad, dir;
+    //    i32 dasprclipmask;
+    i32 dawalclipmask;
     short startwall, endwall, clipsectcnt;
-    uint8_t bad2;
+    u8 bad2;
 
     if ((*sectnum) < 0)
         return (-1);
@@ -800,7 +804,7 @@ int pushmove(
 
             for (i = startwall, wal = &wall[startwall]; i != endwall;
                  i += dir, wal += dir)
-                if (clipinsidebox(*x, *y, i, walldist - 4) == 1) {
+                if (PHYS_ClipInsideBox(*x, *y, i, walldist - 4) == 1) {
                     j = 0;
                     if (wal->nextsector < 0)
                         j = 1;
@@ -810,7 +814,7 @@ int pushmove(
                         sec2 = &sector[wal->nextsector];
 
 
-                        /* Find closest point on wall (dax, day) to (*x, *y) */
+                        // Find the closest point on wall (dax, day) to (*x, *y)
                         dax = wall[wal->point2].x - wal->x;
                         day = wall[wal->point2].y - wal->y;
                         daz = dax * ((*x) - wal->x) + day * ((*y) - wal->y);
@@ -855,12 +859,12 @@ int pushmove(
                             bad2--;
                             if (bad2 == 0)
                                 break;
-                        } while (clipinsidebox(*x, *y, i, walldist - 4) != 0);
+                        } while (PHYS_ClipInsideBox(*x, *y, i, walldist - 4) != 0);
                         bad = -1;
                         k--;
                         if (k <= 0)
                             return (bad);
-                        updatesector(*x, *y, sectnum);
+                        PHYS_UpdateSector(*x, *y, sectnum);
                     } else {
                         for (j = clipsectnum - 1; j >= 0; j--)
                             if (wal->nextsector == clipsectorlist[j])
@@ -879,27 +883,27 @@ int pushmove(
 }
 
 
-void getzrange(
-    int32_t x,
-    int32_t y,
-    int32_t z,
+void PHYS_GetZRange(
+    i32 x,
+    i32 y,
+    i32 z,
     short sectnum,
-    int32_t* ceilz,
-    int32_t* ceilhit,
-    int32_t* florz,
-    int32_t* florhit,
-    int32_t walldist,
-    uint32_t cliptype
+    i32* ceilz,
+    i32* ceilhit,
+    i32* florz,
+    i32* florhit,
+    i32 walldist,
+    u32 cliptype
 ) {
     sectortype* sec;
     walltype *wal, *wal2;
     spritetype* spr;
-    int32_t clipsectcnt, startwall, endwall, tilenum, xoff, yoff, dax, day;
-    int32_t xmin, ymin, xmax, ymax, i, j, k, l, daz, daz2, dx, dy;
-    int32_t x1, y1, x2, y2, x3, y3, x4, y4, ang, cosang, sinang;
-    int32_t xspan, yspan, xrepeat, yrepeat, dasprclipmask, dawalclipmask;
+    i32 clipsectcnt, startwall, endwall, tilenum, xoff, yoff, dax, day;
+    i32 xmin, ymin, xmax, ymax, i, j, k, l, daz, daz2, dx, dy;
+    i32 x1, y1, x2, y2, x3, y3, x4, y4, ang, cosang, sinang;
+    i32 xspan, yspan, xrepeat, yrepeat, dasprclipmask, dawalclipmask;
     short cstat;
-    uint8_t clipyou;
+    u8 clipyou;
 
     if (sectnum < 0) {
         *ceilz = 0x80000000;
@@ -909,7 +913,7 @@ void getzrange(
         return;
     }
 
-    /* Extra walldist for sprites on sector lines */
+    // Extra walldist for sprites on sector lines.
     i = walldist + MAXCLIPDIST + 1;
     xmin = x - i;
     ymin = y - i;
@@ -927,7 +931,8 @@ void getzrange(
     clipsectcnt = 0;
     clipsectnum = 1;
 
-    do /* Collect sectors inside your square first */
+    // Collect sectors inside your square first.
+    do
     {
         sec = &sector[clipsectorlist[clipsectcnt]];
         startwall = sec->wallptr;
@@ -952,7 +957,7 @@ void getzrange(
                 dx = x2 - x1;
                 dy = y2 - y1;
                 if (dx * (y - y1) < (x - x1) * dy)
-                    continue; /* back */
+                    continue; // back.
                 if (dx > 0)
                     dax = dx * (ymin - y1);
                 else
@@ -1001,7 +1006,7 @@ void getzrange(
                 if (dax >= day)
                     continue;
 
-                /* It actually got here, through all the continue's! */
+                // It actually got here, through all the continue's.
                 getzsofslope((short) k, x, y, &daz, &daz2);
                 if (daz > *ceilz) {
                     *ceilz = daz;
@@ -1037,7 +1042,7 @@ void getzrange(
                                 daz += k;
                             if (tiles[spr->picnum].anim_flags & 0x00ff0000)
                                 daz -= (
-                                    (int32_t) ((int8_t) (
+                                    (i32) ((i8) (
                                         (tiles[spr->picnum].anim_flags >> 16) &
                                         255)) * spr->yrepeat << 2);
                             daz2 = daz - (k << 1);
@@ -1046,9 +1051,9 @@ void getzrange(
                         break;
                     case 16:
                         tilenum = spr->picnum;
-                        xoff = (int32_t) ((int8_t) (
+                        xoff = (i32) ((i8) (
                                    (tiles[tilenum].anim_flags >> 8) & 255)) + ((
-                                   int32_t) spr->xoffset);
+                                   i32) spr->xoffset);
                         if ((cstat & 4) > 0)
                             xoff = -xoff;
                         k = spr->ang;
@@ -1071,7 +1076,7 @@ void getzrange(
 
                             if (tiles[spr->picnum].anim_flags & 0x00ff0000)
                                 daz -= (
-                                    (int32_t) ((int8_t) (
+                                    (i32) ((i8) (
                                         (tiles[spr->picnum].anim_flags >> 16) &
                                         255)) * spr->yrepeat << 2);
 
@@ -1088,12 +1093,12 @@ void getzrange(
                                 continue;
 
                         tilenum = spr->picnum;
-                        xoff = (int32_t) ((int8_t) (
+                        xoff = (i32) ((i8) (
                                    (tiles[tilenum].anim_flags >> 8) & 255)) + ((
-                                   int32_t) spr->xoffset);
-                        yoff = (int32_t) ((int8_t) (
+                                   i32) spr->xoffset);
+                        yoff = (i32) ((i8) (
                                    (tiles[tilenum].anim_flags >> 16) & 255)) + ((
-                                   int32_t) spr->yoffset);
+                                   i32) spr->yoffset);
                         if ((cstat & 4) > 0)
                             xoff = -xoff;
                         if ((cstat & 8) > 0)
@@ -1183,21 +1188,33 @@ void getzrange(
 }
 
 
-int hitscan(int32_t xs, int32_t ys, int32_t zs, short sectnum,
-            int32_t vx, int32_t vy, int32_t vz,
-            short* hitsect, short* hitwall, short* hitsprite,
-            int32_t* hitx, int32_t* hity, int32_t* hitz, uint32_t cliptype) {
+int PHYS_Hitscan(
+    i32 xs,
+    i32 ys,
+    i32 zs,
+    short sectnum,
+    i32 vx,
+    i32 vy,
+    i32 vz,
+    short* hitsect,
+    short* hitwall,
+    short* hitsprite,
+    i32* hitx,
+    i32* hity,
+    i32* hitz,
+    u32 cliptype
+) {
     sectortype* sec;
     walltype *wal, *wal2;
     spritetype* spr;
-    int32_t z, zz, x1, y1 = 0, z1 = 0, x2, y2, x3, y3, x4, y4, intx, inty, intz;
-    int32_t topt, topu, bot, dist, offx, offy, cstat;
-    int32_t i, j, k, l, tilenum, xoff, yoff, dax, day, daz, daz2;
-    int32_t ang, cosang, sinang, xspan, yspan, xrepeat, yrepeat;
-    int32_t dawalclipmask, dasprclipmask;
+    i32 z, zz, x1, y1 = 0, z1 = 0, x2, y2, x3, y3, x4, y4, intx, inty, intz;
+    i32 topt, topu, bot, dist, offx, offy, cstat;
+    i32 i, j, k, l, tilenum, xoff, yoff, dax, day, daz, daz2;
+    i32 ang, cosang, sinang, xspan, yspan, xrepeat, yrepeat;
+    i32 dawalclipmask, dasprclipmask;
     short tempshortcnt, tempshortnum, dasector, startwall, endwall;
     short nextsector;
-    uint8_t clipyou;
+    u8 clipyou;
 
     *hitsect = -1;
     *hitwall = -1;
@@ -1254,7 +1271,7 @@ int hitscan(int32_t xs, int32_t ys, int32_t zs, short sectnum,
         if ((x1 != 0x7fffffff) && (
                 klabs(x1 - xs) + klabs(y1 - ys) < klabs((*hitx) - xs) + klabs(
                     (*hity) - ys)))
-            if (inside(x1, y1, dasector) != 0) {
+            if (PHYS_Inside(x1, y1, dasector) != 0) {
                 *hitsect = dasector;
                 *hitwall = -1;
                 *hitsprite = -1;
@@ -1299,7 +1316,7 @@ int hitscan(int32_t xs, int32_t ys, int32_t zs, short sectnum,
         if ((x1 != 0x7fffffff) && (
                 klabs(x1 - xs) + klabs(y1 - ys) < klabs((*hitx) - xs) + klabs(
                     (*hity) - ys)))
-            if (inside(x1, y1, dasector) != 0) {
+            if (PHYS_Inside(x1, y1, dasector) != 0) {
                 *hitsect = dasector;
                 *hitwall = -1;
                 *hitsprite = -1;
@@ -1381,7 +1398,7 @@ int hitscan(int32_t xs, int32_t ys, int32_t zs, short sectnum,
                         z1 += (i >> 1);
 
                     if (tiles[spr->picnum].anim_flags & 0x00ff0000)
-                        z1 -= ((int32_t) ((int8_t) (
+                        z1 -= ((i32) ((i8) (
                                    (tiles[spr->picnum].anim_flags >> 16) & 255))
                                * spr->yrepeat << 2);
 
@@ -1411,14 +1428,12 @@ int hitscan(int32_t xs, int32_t ys, int32_t zs, short sectnum,
                     *hitz = intz;
                     break;
                 case 16:
-                    /*
-                     * These lines get the 2 points of the rotated sprite
-                     * Given: (x1, y1) starts out as the center point
-                     */
+                    // These lines get the 2 points of the rotated sprite
+                    // Given: (x1, y1) starts out as the center point
                     tilenum = spr->picnum;
-                    xoff = (int32_t) ((int8_t) (
+                    xoff = (i32) ((i8) (
                                (tiles[tilenum].anim_flags >> 8) & 255)) + ((
-                               int32_t) spr->xoffset);
+                               i32) spr->xoffset);
                     if ((cstat & 4) > 0)
                         xoff = -xoff;
                     k = spr->ang;
@@ -1432,7 +1447,7 @@ int hitscan(int32_t xs, int32_t ys, int32_t zs, short sectnum,
                     y1 -= mulscale16(day, k);
                     y2 = y1 + mulscale16(day, l);
 
-                    if ((cstat & 64) != 0) /* back side of 1-way sprite */
+                    if ((cstat & 64) != 0) // back side of 1-way sprite
                         if ((x1 - xs) * (y2 - ys) < (x2 - xs) * (y1 - ys))
                             continue;
 
@@ -1451,7 +1466,7 @@ int hitscan(int32_t xs, int32_t ys, int32_t zs, short sectnum,
                         daz = spr->z;
 
                     if (tiles[spr->picnum].anim_flags & 0x00ff0000)
-                        daz -= ((int32_t) ((int8_t) (
+                        daz -= ((i32) ((i8) (
                                     (tiles[spr->picnum].anim_flags >> 16) & 255))
                                 * spr->yrepeat << 2);
 
@@ -1482,12 +1497,12 @@ int hitscan(int32_t xs, int32_t ys, int32_t zs, short sectnum,
                         continue;
 
                     tilenum = spr->picnum;
-                    xoff = (int32_t) ((int8_t) (
+                    xoff = (i32) ((i8) (
                                (tiles[tilenum].anim_flags >> 8) & 255)) + ((
-                               int32_t) spr->xoffset);
-                    yoff = (int32_t) ((int8_t) (
+                               i32) spr->xoffset);
+                    yoff = (i32) ((i8) (
                                (tiles[tilenum].anim_flags >> 16) & 255)) + ((
-                               int32_t) spr->yoffset);
+                               i32) spr->yoffset);
                     if ((cstat & 4) > 0)
                         xoff = -xoff;
                     if ((cstat & 8) > 0)
@@ -1563,23 +1578,23 @@ int hitscan(int32_t xs, int32_t ys, int32_t zs, short sectnum,
 }
 
 
-int neartag(
-    int32_t xs,
-    int32_t ys,
-    int32_t zs,
+int PHYS_NearTag(
+    i32 xs,
+    i32 ys,
+    i32 zs,
     short sectnum,
     short ange,
     short* neartagsector,
     short* neartagwall,
     short* neartagsprite,
-    int32_t* neartaghitdist,
-    int32_t neartagrange,
-    uint8_t tagsearch
+    i32* neartaghitdist,
+    i32 neartagrange,
+    u8 tagsearch
 ) {
     walltype *wal, *wal2;
     spritetype* spr;
-    int32_t i, z, zz, xe, ye, ze, x1, y1, z1, x2, y2, intx, inty, intz;
-    int32_t topt, topu, bot, dist, offx, offy, vx, vy, vz;
+    i32 i, z, zz, xe, ye, ze, x1, y1, z1, x2, y2, intx, inty, intz;
+    i32 topt, topu, bot, dist, offx, offy, vx, vy, vz;
     short tempshortcnt, tempshortnum, dasector, startwall, endwall;
     short nextsector, good;
 
@@ -1681,7 +1696,7 @@ int neartag(
                         if (spr->cstat & 128)
                             z1 += (i << 1);
                         if (tiles[spr->picnum].anim_flags & 0x00ff0000)
-                            z1 -= ((int32_t) ((int8_t) (
+                            z1 -= ((i32) ((i8) (
                                        (tiles[spr->picnum].anim_flags >> 16) &
                                        255)) * spr->yrepeat << 2);
                         if ((intz <= z1) && (intz >= z1 - (i << 2))) {
@@ -1720,7 +1735,7 @@ int neartag(
 }
 
 
-int cansee(
+int PHYS_CanSee(
     i32 x1,
     i32 y1,
     i32 z1,
@@ -1732,8 +1747,8 @@ int cansee(
 ) {
     sectortype* sec;
     walltype *wal, *wal2;
-    int32_t i, cnt, nexts, x, y, z, cz, fz, dasectnum, dacnt, danum;
-    int32_t x21, y21, z21, x31, y31, x34, y34, bot, t;
+    i32 i, cnt, nexts, x, y, z, cz, fz, dasectnum, dacnt, danum;
+    i32 x21, y21, z21, x31, y31, x34, y34, bot, t;
 
     if ((x1 == x2) && (y1 == y2))
         return (sect1 == sect2);
@@ -1760,10 +1775,10 @@ int cansee(
                 continue;
 
             t = y21 * x31 - x21 * y31;
-            if ((uint32_t) t >= (uint32_t) bot)
+            if ((u32) t >= (u32) bot)
                 continue;
             t = y31 * x34 - x31 * y34;
-            if ((uint32_t) t >= (uint32_t) bot)
+            if ((u32) t >= (u32) bot)
                 continue;
 
             nexts = wal->nextsector;
@@ -1796,36 +1811,40 @@ int cansee(
 }
 
 
-/*
- FCS:  x and y are the new position of the entity that has just moved:
- lastKnownSector is an hint (the last known sectorID of the entity).
-
- Thanks to the "hint", the algorithm check:
- 1. Is (x,y) inside sectors[sectnum].
- 2. Flood in sectnum portal and check again if (x,y) is inside.
- 3. Do a linear search on sectors[sectnum] from 0 to numSectors.
-
- Note: Inside uses cross_product and return as soon as the point switch
- from one side to the other.
- */
-void updatesector(int32_t x, int32_t y, short* lastKnownSector) {
+//
+// x and y are the new position of the entity that has just moved:
+// lastKnownSector is a hint (the last known sectorID of the entity).
+//
+// Thanks to the "hint", the algorithm check:
+// 1. Is (x,y) inside sectors[sectnum].
+// 2. Flood in sectnum portal and check again if (x,y) is inside.
+// 3. Do a linear search on sectors[sectnum] from 0 to numSectors.
+//
+// Note: Inside uses cross product and return as soon as the point
+// switch from one side to the other.
+//
+void PHYS_UpdateSector(i32 x, i32 y, short* lastKnownSector) {
     walltype* wal;
-    int32_t i, j;
+    i32 i, j;
 
-    //First check the last sector where (old_x,old_y) was before being updated to (x,y)
-    if (inside(x, y, *lastKnownSector) == 1) {
-        //We found it and (x,y) is still in the same sector: nothing to update !
+    // First check the last sector where (old_x,old_y) was
+    // before being updated to (x,y).
+    if (PHYS_Inside(x, y, *lastKnownSector) == 1) {
+        // We found it and (x,y) is still in the same sector,
+        // so nothing to update!
         return;
     }
 
-    // Seems (x,y) moved into an other sector....hopefully one connected via a portal. Let's flood in each portal.
+    // Seems (x,y) moved into another sector.
+    // Hopefully one connected via a portal.
+    // Let's flood in each portal.
     if ((*lastKnownSector >= 0) && (*lastKnownSector < numsectors)) {
         wal = &wall[sector[*lastKnownSector].wallptr];
         j = sector[*lastKnownSector].wallnum;
         do {
             i = wal->nextsector;
             if (i >= 0)
-                if (inside(x, y, (short) i) == 1) {
+                if (PHYS_Inside(x, y, (short) i) == 1) {
                     *lastKnownSector = i;
                     return;
                 }
@@ -1834,35 +1853,38 @@ void updatesector(int32_t x, int32_t y, short* lastKnownSector) {
         } while (j != 0);
     }
 
-    //Damn that is a BIG move, still cannot find which sector (x,y) belongs to. Let's search via linear search.
+    // Damn that is a BIG move, still cannot find which sector
+    // (x,y) belongs to. Let's search via linear search.
     for (i = numsectors - 1; i >= 0; i--) {
-        if (inside(x, y, (short) i) == 1) {
+        if (PHYS_Inside(x, y, (short) i) == 1) {
             *lastKnownSector = i;
             return;
         }
     }
-    // (x,y) is contained in NO sector. (x,y) is likely out of the map.
+
+    // (x,y) is contained in NO sector.
+    // (x,y) is likely out of the map.
     *lastKnownSector = -1;
 }
 
 
-/*
- FCS: Return true if the point (x,Y) is inside the sector sectnum.
- Note that a sector is closed (but can be concave) so the answer is always 0 or 1.
-
- Algorithm: This is an optimized raycasting inside polygon test:
- http://en.wikipedia.org/wiki/Point_in_polygon#Ray_casting_algorithm
- The goal is to follow an ***horizontal*** ray passing by (x,y) and count how many
- wall are being crossed.
- If it is an odd number of time: (x,y) is inside the sector.
- If it is an even nymber of time:(x,y) is outside the sector.
- */
-int inside(int32_t x, int32_t y, short sectnum) {
+//
+// Return true if the point (x, y) is inside the sector sectnum.
+// Note that a sector is closed (but can be concave) so the answer is always 0 or 1.
+//
+// Algorithm: This is an optimized raycasting inside polygon test:
+// http://en.wikipedia.org/wiki/Point_in_polygon#Ray_casting_algorithm
+// The goal is to follow an ***horizontal*** ray passing by (x,y) and count how many
+// wall are being crossed.
+// If it is an odd number of time: (x,y) is inside the sector.
+// If it is an even nymber of time:(x,y) is outside the sector.
+//
+int PHYS_Inside(i32 x, i32 y, short sectnum) {
     walltype* wal;
-    int32_t i, x1, y1, x2, y2;
-    uint32_t wallCrossed;
+    i32 i, x1, y1, x2, y2;
+    u32 wallCrossed;
 
-    //Quick check if the sector ID is valid.
+    // Quick check if the sector ID is valid.
     if ((sectnum < 0) || (sectnum >= numsectors))
         return (-1);
 
@@ -1874,22 +1896,29 @@ int inside(int32_t x, int32_t y, short sectnum) {
         y2 = wall[wal->point2].y - y;
 
         // Compare the sign of y1 and y2.
-        // If (y1^y2) < 0 : y1 and y2 have different sign bit:  y is between wal->y and wall[wal->point2].y.
-        // The goal is to not take into consideration any wall that is totally above or totally under the point [x,y].
+        // If (y1^y2) < 0:
+        //   y1 and y2 have different sign bit, so y is between
+        //   wal->y and wall[wal->point2].y.
+        // The goal is to not take into consideration any wall that
+        // is totally above or totally under the point [x,y].
         if ((y1 ^ y2) < 0) {
             x1 = wal->x - x;
             x2 = wall[wal->point2].x - x;
 
-            //If (x1^x2) >= 0 x1 and x2 have identic sign bit: x is on the left or the right of both wal->x and wall[wal->point2].x.
+            // If (x1^x2) >= 0 x1 and x2 have identical sign bit:
+            //   x is on the left or the right of both
+            //   wal->x and wall[wal->point2].x.
             if ((x1 ^ x2) >= 0) {
-                // If (x,y) is totally on the left or on the right, just count x1 (which indicate if we are on
-                // on the left or on the right.
+                // If (x,y) is totally on the left or on the right, just
+                // count x1 (which indicate if we are on the left or on the right).
                 wallCrossed ^= x1;
             } else {
-                // This is the most complicated case: X is between x1 and x2, we need a fine grained test.
-                // We need to know exactly if it is on the left or on the right in order to know if the ray
-                // is crossing the wall or not,
-                // The sign of the Cross-Product can answer this case :) !
+                // This is the most complicated case:
+                // x is between x1 and x2, we need a fine-grained test.
+                // We need to know exactly if it is on the left or on
+                // the right in order to know if the ray is crossing the
+                // wall or not.
+                // The sign of the cross-product can answer this case.
                 wallCrossed ^= (x1 * y2 - x2 * y1) ^ y2;
             }
         }
@@ -1899,15 +1928,16 @@ int inside(int32_t x, int32_t y, short sectnum) {
 
     } while (i);
 
-    //Just return the sign. If the position vector cut the sector walls an odd number of time
-    //it is inside. Otherwise (even) it is outside.
+    // Just return the sign.
+    // If the position vector cut the sector walls an odd number
+    // of time it is inside. Otherwise (even) it is outside.
     return (wallCrossed >> 31);
 }
 
 
-int clipinsidebox(int32_t x, int32_t y, short wallnum, int32_t walldist) {
+int PHYS_ClipInsideBox(i32 x, i32 y, short wallnum, i32 walldist) {
     walltype* wal;
-    int32_t x1, y1, x2, y2, r;
+    i32 x1, y1, x2, y2, r;
 
     r = (walldist << 1);
     wal = &wall[wallnum];
@@ -1928,7 +1958,7 @@ int clipinsidebox(int32_t x, int32_t y, short wallnum, int32_t walldist) {
 
     x2 -= x1;
     y2 -= y1;
-    if (x2 * (walldist - y1) >= y2 * (walldist - x1)) /* Front */
+    if (x2 * (walldist - y1) >= y2 * (walldist - x1)) // Front.
     {
         if (x2 > 0)
             x2 *= (0 - y1);
@@ -1952,14 +1982,14 @@ int clipinsidebox(int32_t x, int32_t y, short wallnum, int32_t walldist) {
 }
 
 
-void dragpoint(short pointhighlight, int32_t dax, int32_t day) {
+void PHYS_DragPoint(short pointhighlight, i32 dax, i32 day) {
     short cnt, tempshort;
 
     wall[pointhighlight].x = dax;
     wall[pointhighlight].y = day;
 
     cnt = MAXWALLS;
-    tempshort = pointhighlight; /* search points CCW */
+    tempshort = pointhighlight; // search points CCW.
     do {
         if (wall[tempshort].nextwall >= 0) {
             tempshort = wall[wall[tempshort].nextwall].point2;
@@ -1967,7 +1997,7 @@ void dragpoint(short pointhighlight, int32_t dax, int32_t day) {
             wall[tempshort].y = day;
         } else {
             tempshort = pointhighlight;
-            /* search points CW if not searched all the way around */
+            // search points CW if not searched all the way around.
             do {
                 if (wall[lastwall(tempshort)].nextwall >= 0) {
                     tempshort = wall[lastwall(tempshort)].nextwall;

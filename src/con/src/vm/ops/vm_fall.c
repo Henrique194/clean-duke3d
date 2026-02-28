@@ -103,7 +103,7 @@ static void CON_SoftLanding(con_vm_t* vm) {
     i32 ceildist = (4L << 8);
     i32 flordist = (4L << 8);
     u32 cliptype = CLIPMASK0;
-    pushmove(x, y, z, &sec, walldist, ceildist, flordist, cliptype);
+    PHYS_PushMove(x, y, z, &sec, walldist, ceildist, flordist, cliptype);
     if (sec != spr->sectnum && sec >= 0 && sec < MAXSECTORS) {
         B_ChangeSpriteSect(vm->sprite_idx, sec);
     }

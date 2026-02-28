@@ -276,7 +276,7 @@ int loadboard(char* filename, int32_t* daposx, int32_t* daposy,
         B_InsertSprite(sprite[i].sectnum, sprite[i].statnum);
 
     /* Must be after loading sectors, etc! */
-    updatesector(*daposx, *daposy, dacursectnum);
+    PHYS_UpdateSector(*daposx, *daposy, dacursectnum);
 
     kclose(fil);
 

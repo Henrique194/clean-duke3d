@@ -39,7 +39,7 @@ void VM_PlrStomp(con_vm_t* vm) {
     i32 y2 = p->posy;
     i32 z2 = p->posz + (16 << 8);
     i16 sect2 = sprite[p->i].sectnum;
-    if (!cansee(x1, y1, z1, sect1, x2, y2, z2, sect2)) {
+    if (!PHYS_CanSee(x1, y1, z1, sect1, x2, y2, z2, sect2)) {
         // Player cannot see actor, so do not stomp it.
         return;
     }

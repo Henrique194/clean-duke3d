@@ -44,7 +44,7 @@ static i16 VM_GetTarget(const con_vm_t* vm) {
     i32 y2 = spr->y;
     i32 z2 = spr->z;
     i16 sect2 = spr->sectnum;
-    if (cansee(x1, y1, z1, sect1, x2, y2, z2, sect2)) {
+    if (PHYS_CanSee(x1, y1, z1, sect1, x2, y2, z2, sect2)) {
         // Can see Holoduke, so chase it.
         return j;
     }

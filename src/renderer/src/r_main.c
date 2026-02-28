@@ -658,7 +658,7 @@ void drawrooms(
         // Even if the player leaves the map, the engine will keep on rendering from the last visited sector.
         // Save it.
         i = globalcursectnum;
-        updatesector(globalposx, globalposy, &globalcursectnum);
+        PHYS_UpdateSector(globalposx, globalposy, &globalcursectnum);
         //Seem the player has left the map since updatesector cannot locate him -> Restore to the last known sector.
         if (globalcursectnum < 0)
             globalcursectnum = i;

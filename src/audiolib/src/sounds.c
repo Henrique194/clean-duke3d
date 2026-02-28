@@ -299,7 +299,7 @@ int xyzsound(short num,short i,int32_t x,int32_t y,int32_t z)
 
     sndist += soundvo[num];
     if(sndist < 0) sndist = 0;
-    if( sndist && PN != MUSICANDSFX && !cansee(cx,cy,cz-(24<<8),cs,SX,SY,SZ-(24<<8),SECT) )
+    if( sndist && PN != MUSICANDSFX && !PHYS_CanSee(cx,cy,cz-(24<<8),cs,SX,SY,SZ-(24<<8),SECT) )
         sndist += sndist>>5;
 
     switch(num)
@@ -523,7 +523,7 @@ void pan3dsound(void)
         sndist += soundvo[j];
         if(sndist < 0) sndist = 0;
 
-        if( sndist && PN != MUSICANDSFX && !cansee(cx,cy,cz-(24<<8),cs,sx,sy,sz-(24<<8),SECT) )
+        if( sndist && PN != MUSICANDSFX && !PHYS_CanSee(cx,cy,cz-(24<<8),cs,sx,sy,sz-(24<<8),SECT) )
             sndist += sndist>>5;
 
         if(PN == MUSICANDSFX && SLT < 999)

@@ -1,16 +1,9 @@
-set(LIB build)
+set(LIB physics)
 
 list(REMOVE_ITEM LIBS ${LIB})
 
 add_library(${LIB} STATIC
-	src/engine.c
-	src/filesystem.c
-	src/fixedPoint_math.c
-	src/mathlib.c
-	src/mmulti.c
-	src/sprite.c
-	src/tiles.c
-	src/timer.c
+    src/physics.c
 )
 
 target_include_directories(${LIB} PRIVATE ${CMAKE_BINARY_DIR} "../")

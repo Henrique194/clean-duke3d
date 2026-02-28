@@ -64,7 +64,7 @@ void getglobalz(short i) {
         else
             zr = 127L;
 
-        getzrange(s->x, s->y, s->z - (FOURSLEIGHT), s->sectnum,
+        PHYS_GetZRange(s->x, s->y, s->z - (FOURSLEIGHT), s->sectnum,
                   &hittype[i].ceilingz, &hz, &hittype[i].floorz, &lz, zr,
                   CLIPMASK0);
 
@@ -108,7 +108,7 @@ void makeitfall(short i) {
 
     if ((s->statnum == 1 || s->statnum == 10 || s->statnum == 2
          || s->statnum == 6))
-        getzrange(s->x, s->y, s->z - (FOURSLEIGHT), s->sectnum,
+        PHYS_GetZRange(s->x, s->y, s->z - (FOURSLEIGHT), s->sectnum,
                   &hittype[i].ceilingz, &hz, &hittype[i].floorz, &lz, 127L,
                   CLIPMASK0);
     else {

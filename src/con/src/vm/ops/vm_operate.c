@@ -34,7 +34,7 @@ static i16 CON_GetNearSector(const spritetype* spr) {
     short angle = spr->ang;
     i32 tag_range = 768L;
     u8 tag_search = 1;
-    neartag(
+    PHYS_NearTag(
         xs,
         ys,
         zs,

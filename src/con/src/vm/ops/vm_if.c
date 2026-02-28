@@ -97,22 +97,22 @@ void VM_IfBulletNear(con_vm_t* vm) {
 void VM_IfAwayFromWall(con_vm_t* vm) {
     const spritetype* spr = vm->sprite;
     i16 sec = spr->sectnum;
-    updatesector(spr->x + 108, spr->y + 108, &sec);
+    PHYS_UpdateSector(spr->x + 108, spr->y + 108, &sec);
     if (sec != spr->sectnum) {
         VM_IfElse(vm, false);
         return;
     }
-    updatesector(spr->x - 108, spr->y - 108, &sec);
+    PHYS_UpdateSector(spr->x - 108, spr->y - 108, &sec);
     if (sec != spr->sectnum) {
         VM_IfElse(vm, false);
         return;
     }
-    updatesector(spr->x + 108, spr->y - 108, &sec);
+    PHYS_UpdateSector(spr->x + 108, spr->y - 108, &sec);
     if (sec != spr->sectnum) {
         VM_IfElse(vm, false);
         return;
     }
-    updatesector(spr->x - 108, spr->y + 108, &sec);
+    PHYS_UpdateSector(spr->x - 108, spr->y + 108, &sec);
     if (sec != spr->sectnum) {
         VM_IfElse(vm, false);
         return;

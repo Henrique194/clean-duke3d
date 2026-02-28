@@ -54,7 +54,7 @@ static short furthestcanseepoint(const con_vm_t* vm, spritetype* ts, i32* dax, i
     }
 
     for (j = ts->ang; j < (2048 + ts->ang); j += (angincs - (TRAND & 511))) {
-        hitscan(ts->x, ts->y, ts->z - (16 << 8), ts->sectnum,
+        PHYS_Hitscan(ts->x, ts->y, ts->z - (16 << 8), ts->sectnum,
                 sintable[(j + 512) & 2047], sintable[j & 2047],
                 16384 - (TRAND & 32767), &hitsect, &hitwall, &hitspr, &hx, &hy,
                 &hz, CLIPMASK1);
@@ -63,7 +63,7 @@ static short furthestcanseepoint(const con_vm_t* vm, spritetype* ts, i32* dax, i
         da = klabs(hx - s->x) + klabs(hy - s->y);
 
         if (d < da) {
-            if (cansee(hx, hy, hz, hitsect, s->x, s->y, s->z - (16 << 8), s->sectnum)) {
+            if (PHYS_CanSee(hx, hy, hz, hitsect, s->x, s->y, s->z - (16 << 8), s->sectnum)) {
                 *dax = hx;
                 *day = hy;
                 return hitsect;
@@ -84,7 +84,7 @@ static bool CON_CanSeeHoloDuke(const con_vm_t* vm) {
     i32 y2 = s->y;
     i32 z2 = s->z;
     short sect2 = s->sectnum;
-    return cansee(x1, y1, z1, sect1, x2, y2, z2, sect2);
+    return PHYS_CanSee(x1, y1, z1, sect1, x2, y2, z2, sect2);
 }
 
 static spritetype* CON_GetPlayerSprite(const con_vm_t* vm) {
@@ -109,7 +109,7 @@ static bool CON_CanSeePlayerSprite(const con_vm_t* vm, spritetype* player) {
     i32 y2 = player->y;
     i32 z2 = player->z - (24 << 8);
     short sect2 = player->sectnum;
-    if (cansee(x1, y1, z1, sect1, x2, y2, z2, sect2)) {
+    if (PHYS_CanSee(x1, y1, z1, sect1, x2, y2, z2, sect2)) {
         // Update last visible player location.
         hit->lastvx = player->x;
         hit->lastvy = player->y;

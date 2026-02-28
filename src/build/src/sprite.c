@@ -167,7 +167,7 @@ int B_SetSprite(short spritenum, int32_t newx, int32_t newy, int32_t newz) {
     sprite[spritenum].z = newz;
 
     tempsectnum = sprite[spritenum].sectnum;
-    updatesector(newx, newy, &tempsectnum);
+    PHYS_UpdateSector(newx, newy, &tempsectnum);
     if (tempsectnum < 0) {
         return -1;
     }

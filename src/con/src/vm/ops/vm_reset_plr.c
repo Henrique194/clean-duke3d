@@ -61,7 +61,7 @@ static void CON_ResetPositions(con_vm_t* vm) {
     p->oposz = p->posz;
 
     // Re-links sprite into correct sector.
-    updatesector(p->posx, p->posy, &p->cursectnum);
+    PHYS_UpdateSector(p->posx, p->posy, &p->cursectnum);
     B_SetSprite(p->i, p->posx, p->posy, p->posz + PHEIGHT);
 }
 

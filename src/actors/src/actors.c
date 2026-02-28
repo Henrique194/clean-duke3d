@@ -202,9 +202,9 @@ void P_HitRadius(
                     }
                     x1 = (((wal->x + wall[wal->point2].x) >> 1) + s->x) >> 1;
                     y1 = (((wal->y + wall[wal->point2].y) >> 1) + s->y) >> 1;
-                    updatesector(x1, y1, &sect);
+                    PHYS_UpdateSector(x1, y1, &sect);
                     if (sect >= 0
-                        && cansee(x1, y1, s->z, sect, s->x, s->y, s->z,
+                        && PHYS_CanSee(x1, y1, s->z, sect, s->x, s->y, s->z,
                                   s->sectnum))
                         P_CheckHitWall(i, x, wal->x, wal->y, s->z, s->picnum);
                 }
@@ -225,7 +225,7 @@ SKIPWALLCHECK:
                 if (s->picnum != SHRINKSPARK || (sj->cstat & 257))
                     if (P_Dist3D(s, sj) < r) {
                         if (badguy(sj)
-                            && !cansee(sj->x, sj->y, sj->z + q, sj->sectnum,
+                            && !PHYS_CanSee(sj->x, sj->y, sj->z + q, sj->sectnum,
                                        s->x, s->y, s->z + q, s->sectnum))
                             goto BOLT;
                         P_CheckHitSprite(j, i);
@@ -252,7 +252,7 @@ SKIPWALLCHECK:
                     sj->z += PHEIGHT;
 
                 if (d < r
-                    && cansee(sj->x, sj->y, sj->z - (8 << 8), sj->sectnum, s->x,
+                    && PHYS_CanSee(sj->x, sj->y, sj->z - (8 << 8), sj->sectnum, s->x,
                               s->y, s->z - (12 << 8), s->sectnum)) {
                     hittype[j].ang = getangle(sj->x - s->x, sj->y - s->y);
 
@@ -316,7 +316,7 @@ SKIPWALLCHECK:
                                 ps[p].posy = ps[p].oposy;
                                 ps[p].posz = ps[p].oposz;
                                 ps[p].ang = ps[p].oang;
-                                updatesector(ps[p].posx, ps[p].posy,
+                                PHYS_UpdateSector(ps[p].posx, ps[p].posy,
                                              &ps[p].cursectnum);
                                 P_SetPal(&ps[p]);
 
@@ -376,7 +376,7 @@ int P_MoveSprite(
         oldy = sprite[spritenum].y;
 
         if (sprite[spritenum].xrepeat > 60)
-            retval = clipmove(
+            retval = PHYS_ClipMove(
                 &sprite[spritenum].x,
                 &sprite[spritenum].y,
                 &daz,
@@ -396,7 +396,7 @@ int P_MoveSprite(
             else
                 cd = 192L;
 
-            retval = clipmove(
+            retval = PHYS_ClipMove(
                 &sprite[spritenum].x,
                 &sprite[spritenum].y,
                 &daz,
@@ -454,12 +454,12 @@ int P_MoveSprite(
             sprite[spritenum].ang += 768;
     } else {
         if (sprite[spritenum].statnum == 4)
-            retval = clipmove(&sprite[spritenum].x, &sprite[spritenum].y, &daz,
+            retval = PHYS_ClipMove(&sprite[spritenum].x, &sprite[spritenum].y, &daz,
                               &dasectnum, ((xchange * TICSPERFRAME) << 11),
                               ((ychange * TICSPERFRAME) << 11), 8L, (4 << 8),
                               (4 << 8), cliptype);
         else
-            retval = clipmove(&sprite[spritenum].x, &sprite[spritenum].y, &daz,
+            retval = PHYS_ClipMove(&sprite[spritenum].x, &sprite[spritenum].y, &daz,
                               &dasectnum, ((xchange * TICSPERFRAME) << 11),
                               ((ychange * TICSPERFRAME) << 11),
                               (int32_t) (sprite[spritenum].clipdist << 2),
@@ -627,7 +627,7 @@ void P_MoveSprites(short i) {
     for (x = startwall; x < endwall; x++) {
         rotatepoint(0, 0, msx[j], msy[j], k & 2047, &tx, &ty);
 
-        dragpoint(x, s->x + tx, s->y + ty);
+        PHYS_DragPoint(x, s->x + tx, s->y + ty);
 
         j++;
     }
@@ -654,24 +654,24 @@ void P_MoveFTA(void) {
                     if (badguy(s)) {
                         px = ps[p].oposx + 64 - (TRAND & 127);
                         py = ps[p].oposy + 64 - (TRAND & 127);
-                        updatesector(px, py, &psect);
+                        PHYS_UpdateSector(px, py, &psect);
                         if (psect == -1) {
                             i = nexti;
                             continue;
                         }
                         sx = s->x + 64 - (TRAND & 127);
                         sy = s->y + 64 - (TRAND & 127);
-                        updatesector(px, py, &ssect);
+                        PHYS_UpdateSector(px, py, &ssect);
                         if (ssect == -1) {
                             i = nexti;
                             continue;
                         }
-                        j = cansee(sx, sy, s->z - (TRAND % (52 << 8)),
+                        j = PHYS_CanSee(sx, sy, s->z - (TRAND % (52 << 8)),
                                    s->sectnum, px, py,
                                    ps[p].oposz - (TRAND % (32 << 8)),
                                    ps[p].cursectnum);
                     } else
-                        j = cansee(s->x, s->y, s->z - ((TRAND & 31) << 8),
+                        j = PHYS_CanSee(s->x, s->y, s->z - ((TRAND & 31) << 8),
                                    s->sectnum, ps[p].oposx, ps[p].oposy,
                                    ps[p].oposz - ((TRAND & 31) << 8),
                                    ps[p].cursectnum);
@@ -2869,7 +2869,7 @@ void P_MoveActors(void) {
                         j = nextj;
                     }
 
-                    j = clipmove(
+                    j = PHYS_ClipMove(
                         &s->x, &s->y, &s->z, &s->sectnum,
                         (((s->xvel * (sintable[(s->ang + 512) & 2047])) >> 14)
                          * TICSPERFRAME)
@@ -3051,7 +3051,7 @@ void P_MoveActors(void) {
                         s->ang = a;
                     }
                     if (t[2] > (26 * 3)
-                        || !cansee(s->x, s->y, s->z - (16 << 8), s->sectnum,
+                        || !PHYS_CanSee(s->x, s->y, s->z - (16 << 8), s->sectnum,
                                    ps[p].posx, ps[p].posy, ps[p].posz,
                                    ps[p].cursectnum)) {
                         t[0] = 0;
@@ -3078,7 +3078,7 @@ void P_MoveActors(void) {
                     } else {
                         t[2]++;
                         if (t[2] > (26 * 3)
-                            || !cansee(s->x, s->y, s->z - (16 << 8), s->sectnum,
+                            || !PHYS_CanSee(s->x, s->y, s->z - (16 << 8), s->sectnum,
                                        ps[p].posx, ps[p].posy, ps[p].posz,
                                        ps[p].cursectnum)) {
                             t[0] = 1;
@@ -3319,7 +3319,7 @@ void P_MoveActors(void) {
                         ps[p].posz = ps[p].oposz;
                         ps[p].ang = ps[p].oang;
 
-                        updatesector(ps[p].posx, ps[p].posy, &ps[p].cursectnum);
+                        PHYS_UpdateSector(ps[p].posx, ps[p].posy, &ps[p].cursectnum);
                         P_SetPal(&ps[p]);
 
                         j = headspritestat[1];
@@ -3728,7 +3728,7 @@ void P_MoveActors(void) {
                     }
                 } else if (s->picnum == HEAVYHBOMB && x < 788 && t[0] > 7
                            && s->xvel == 0)
-                    if (cansee(s->x, s->y, s->z - (8 << 8), s->sectnum,
+                    if (PHYS_CanSee(s->x, s->y, s->z - (8 << 8), s->sectnum,
                                ps[p].posx, ps[p].posy, ps[p].posz,
                                ps[p].cursectnum))
                         if (ps[p].ammo_amount[HANDBOMB_WEAPON]
@@ -4789,7 +4789,7 @@ void P_MoveEffectors(void) //STATNUM 3
                             for (p = connecthead; p >= 0; p = connectpoint2[p])
                                 if (sprite[ps[p].i].extra > 0) {
                                     k = ps[p].cursectnum;
-                                    updatesector(ps[p].posx, ps[p].posy, &k);
+                                    PHYS_UpdateSector(ps[p].posx, ps[p].posy, &k);
                                     if ((k == -1 && ud.clipping == 0)
                                         || (k == s->sectnum
                                             && ps[p].cursectnum
@@ -4866,7 +4866,7 @@ void P_MoveEffectors(void) //STATNUM 3
                             for (p = connecthead; p >= 0; p = connectpoint2[p])
                                 if (sprite[ps[p].i].extra > 0) {
                                     k = ps[p].cursectnum;
-                                    updatesector(ps[p].posx, ps[p].posy, &k);
+                                    PHYS_UpdateSector(ps[p].posx, ps[p].posy, &k);
                                     if ((k == -1 && ud.clipping == 0)
                                         || (k == s->sectnum
                                             && ps[p].cursectnum
@@ -4887,7 +4887,7 @@ void P_MoveEffectors(void) //STATNUM 3
                                 && sprite[j].picnum != SECTOREFFECTOR
                                 && sprite[j].picnum != LOCATORS) {
                                 k = sprite[j].sectnum;
-                                updatesector(sprite[j].x, sprite[j].y, &k);
+                                PHYS_UpdateSector(sprite[j].x, sprite[j].y, &k);
                                 if (sprite[j].extra >= 0 && k == s->sectnum) {
                                     P_GutsDir(&sprite[j], JIBS6, 72,
                                               myconnectindex);
@@ -4958,7 +4958,7 @@ void P_MoveEffectors(void) //STATNUM 3
                             for (p = connecthead; p >= 0; p = connectpoint2[p])
                                 if (sprite[ps[p].i].extra > 0) {
                                     k = ps[p].cursectnum;
-                                    updatesector(ps[p].posx, ps[p].posy, &k);
+                                    PHYS_UpdateSector(ps[p].posx, ps[p].posy, &k);
                                     if ((k == -1 && ud.clipping == 0)
                                         || (k == s->sectnum
                                             && ps[p].cursectnum
@@ -5020,7 +5020,7 @@ void P_MoveEffectors(void) //STATNUM 3
                             for (p = connecthead; p >= 0; p = connectpoint2[p])
                                 if (sprite[ps[p].i].extra > 0) {
                                     k = ps[p].cursectnum;
-                                    updatesector(ps[p].posx, ps[p].posy, &k);
+                                    PHYS_UpdateSector(ps[p].posx, ps[p].posy, &k);
                                     if ((k == -1 && ud.clipping == 0)
                                         || (k == s->sectnum
                                             && ps[p].cursectnum
@@ -5047,7 +5047,7 @@ void P_MoveEffectors(void) //STATNUM 3
                                 //                    if(sprite[j].sectnum != s->sectnum)
                                 {
                                     k = sprite[j].sectnum;
-                                    updatesector(sprite[j].x, sprite[j].y, &k);
+                                    PHYS_UpdateSector(sprite[j].x, sprite[j].y, &k);
                                     if (sprite[j].extra >= 0
                                         && k == s->sectnum) {
                                         P_GutsDir(&sprite[j], JIBS6, 24,
@@ -5417,7 +5417,7 @@ void P_MoveEffectors(void) //STATNUM 3
                         k = headspritestat[1];
                         while (k >= 0) {
                             if (sprite[k].extra > 0 && badguy(&sprite[k])
-                                && clipinsidebox(sprite[k].x, sprite[k].y, j,
+                                && PHYS_ClipInsideBox(sprite[k].x, sprite[k].y, j,
                                                  256L)
                                        == 1)
                                 goto BOLT;
@@ -5427,7 +5427,7 @@ void P_MoveEffectors(void) //STATNUM 3
                         k = headspritestat[10];
                         while (k >= 0) {
                             if (sprite[k].owner >= 0
-                                && clipinsidebox(sprite[k].x, sprite[k].y, j,
+                                && PHYS_ClipInsideBox(sprite[k].x, sprite[k].y, j,
                                                  144L)
                                        == 1) {
                                 t[5] = 8; // Delay
@@ -5950,8 +5950,8 @@ void P_MoveEffectors(void) //STATNUM 3
                         j = nextj;
                     }
 
-                    dragpoint((short) t[1], wall[t[1]].x + x, wall[t[1]].y + l);
-                    dragpoint((short) t[2], wall[t[2]].x + x, wall[t[2]].y + l);
+                    PHYS_DragPoint((short) t[1], wall[t[1]].x + x, wall[t[1]].y + l);
+                    PHYS_DragPoint((short) t[2], wall[t[2]].x + x, wall[t[2]].y + l);
 
                     for (p = connecthead; p >= 0; p = connectpoint2[p])
                         if (ps[p].cursectnum == s->sectnum && ps[p].on_ground) {
@@ -6220,7 +6220,7 @@ void P_MoveEffectors(void) //STATNUM 3
                         ud.camerasprite = i;
                         t[0]++;
                     } else if (ud.recstat == 2 && ps[p].newowner == -1) {
-                        if (cansee(s->x, s->y, s->z, SECT, ps[p].posx,
+                        if (PHYS_CanSee(s->x, s->y, s->z, SECT, ps[p].posx,
                                    ps[p].posy, ps[p].posz, ps[p].cursectnum)) {
                             if (x < (uint32_t) sh) {
                                 ud.camerasprite = i;
@@ -6286,7 +6286,7 @@ void P_MoveEffectors(void) //STATNUM 3
                             j = nextspritestat[j];
                         }
                     } else if (T3 > (T2 >> 3) && T3 < (T2 >> 2)) {
-                        if (cansee(s->x, s->y, s->z, s->sectnum,
+                        if (PHYS_CanSee(s->x, s->y, s->z, s->sectnum,
                                    ps[screenpeek].posx, ps[screenpeek].posy,
                                    ps[screenpeek].posz,
                                    ps[screenpeek].cursectnum))

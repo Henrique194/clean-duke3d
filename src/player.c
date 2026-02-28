@@ -188,7 +188,7 @@ void P_Tracers(
         x1 += xv;
         y1 += yv;
         z1 += zv;
-        updatesector(x1, y1, &sect);
+        PHYS_UpdateSector(x1, y1, &sect);
         if (sect >= 0) {
             if (sector[sect].lotag == 2)
                 EGS(sect, x1, y1, z1, WATERBUBBLE, -32, 4 + (TRAND & 3),
@@ -210,7 +210,7 @@ int32_t P_Hits(short i) {
     else
         zoff = 0;
 
-    hitscan(SX, SY, SZ - zoff, SECT, sintable[(SA + 512) & 2047],
+    PHYS_Hitscan(SX, SY, SZ - zoff, SECT, sintable[(SA + 512) & 2047],
             sintable[SA & 2047], 0, &sect, &hw, &hs, &sx, &sy, &sz, CLIPMASK1);
 
     return (FindDistance2D(sx - SX, sy - SY));
@@ -227,7 +227,7 @@ int32_t P_HitSprite(short i, short* hitsp) {
     else
         zoff = 0;
 
-    hitscan(SX, SY, SZ - zoff, SECT, sintable[(SA + 512) & 2047],
+    PHYS_Hitscan(SX, SY, SZ - zoff, SECT, sintable[(SA + 512) & 2047],
             sintable[SA & 2047], 0, &sect, &hw, hitsp, &sx, &sy, &sz,
             CLIPMASK1);
 
@@ -242,7 +242,7 @@ int32_t P_HitWall(player_t* p, short* hitw) {
     int32_t sx, sy, sz;
     short sect, hs;
 
-    hitscan(p->posx, p->posy, p->posz, p->cursectnum,
+    PHYS_Hitscan(p->posx, p->posy, p->posz, p->cursectnum,
             sintable[(p->ang + 512) & 2047], sintable[p->ang & 2047], 0, &sect,
             hitw, &hs, &sx, &sy, &sz, CLIPMASK0);
 
@@ -342,11 +342,11 @@ short P_Aim(spritetype* s, short aang, short auto_aim) {
                                         a = 1;
 
                                     if (PN == ORGANTIC || PN == ROTATEGUN)
-                                        cans = cansee(SX, SY, SZ, SECT, s->x,
+                                        cans = PHYS_CanSee(SX, SY, SZ, SECT, s->x,
                                                       s->y, s->z - (32 << 8),
                                                       s->sectnum);
                                     else
-                                        cans = cansee(
+                                        cans = PHYS_CanSee(
                                             SX, SY, SZ - (32 << 8), SECT, s->x,
                                             s->y, s->z - (32 << 8), s->sectnum);
 
@@ -424,7 +424,7 @@ void P_Shoot(short i, short atwith) {
                 }
             }
 
-            hitscan(sx, sy, sz, sect, sintable[(sa + 512) & 2047],
+            PHYS_Hitscan(sx, sy, sz, sect, sintable[(sa + 512) & 2047],
                     sintable[sa & 2047], zvel << 6, &hitsect, &hitwall, &hitspr,
                     &hitx, &hity, &hitz, CLIPMASK1);
 
@@ -593,7 +593,7 @@ void P_Shoot(short i, short atwith) {
             }
 
             s->cstat &= ~257;
-            hitscan(sx, sy, sz, sect, sintable[(sa + 512) & 2047],
+            PHYS_Hitscan(sx, sy, sz, sect, sintable[(sa + 512) & 2047],
                     sintable[sa & 2047], zvel << 6, &hitsect, &hitwall, &hitspr,
                     &hitx, &hity, &hitz, CLIPMASK1);
             s->cstat |= 257;
@@ -951,7 +951,7 @@ void P_Shoot(short i, short atwith) {
             else
                 zvel = 0;
 
-            hitscan(sx, sy, sz - ps[p].pyoff, sect, sintable[(sa + 512) & 2047],
+            PHYS_Hitscan(sx, sy, sz - ps[p].pyoff, sect, sintable[(sa + 512) & 2047],
                     sintable[sa & 2047], zvel << 6, &hitsect, &hitwall, &hitspr,
                     &hitx, &hity, &hitz, CLIPMASK1);
 
@@ -1054,7 +1054,7 @@ void P_Shoot(short i, short atwith) {
             //            RESHOOTGROW:
 
             s->cstat &= ~257;
-            hitscan(sx, sy, sz, sect, sintable[(sa + 512) & 2047],
+            PHYS_Hitscan(sx, sy, sz, sect, sintable[(sa + 512) & 2047],
                     sintable[sa & 2047], zvel << 6, &hitsect, &hitwall, &hitspr,
                     &hitx, &hity, &hitz, CLIPMASK1);
 
@@ -2409,7 +2409,7 @@ void P_ProcessInput(short snum) {
     p->spritebridge = 0;
 
     shrunk = (s->yrepeat < 32);
-    getzrange(p->posx, p->posy, p->posz, psect, &cz, &hz, &fz, &lz, 163L,
+    PHYS_GetZRange(p->posx, p->posy, p->posz, psect, &cz, &hz, &fz, &lz, 163L,
               CLIPMASK0);
 
     j = getflorzofslope(psect, p->posx, p->posy);
@@ -2433,7 +2433,7 @@ void P_ProcessInput(short snum) {
         x = p->posx + (sintable[(p->ang + 512) & 2047] >> 5);
         y = p->posy + (sintable[p->ang & 2047] >> 5);
         tempsect = psect;
-        updatesector(x, y, &tempsect);
+        PHYS_UpdateSector(x, y, &tempsect);
         if (tempsect >= 0) {
             k = getflorzofslope(psect, x, y);
             if (psect == tempsect)
@@ -2639,7 +2639,7 @@ void P_ProcessInput(short snum) {
                 s->zvel = -348;
             }
 
-            clipmove(&p->posx, &p->posy, &p->posz, &p->cursectnum, 0, 0, 164L,
+            PHYS_ClipMove(&p->posx, &p->posy, &p->posz, &p->cursectnum, 0, 0, 164L,
                      (4L << 8), (4L << 8), CLIPMASK0);
             //            p->bobcounter += 32;
         }
@@ -2653,9 +2653,9 @@ void P_ProcessInput(short snum) {
         p->horiz = 100;
         p->horizoff = 0;
 
-        updatesector(p->posx, p->posy, &p->cursectnum);
+        PHYS_UpdateSector(p->posx, p->posy, &p->cursectnum);
 
-        pushmove(&p->posx, &p->posy, &p->posz, &p->cursectnum, 128L, (4L << 8),
+        PHYS_PushMove(&p->posx, &p->posy, &p->posz, &p->cursectnum, 128L, (4L << 8),
                  (20L << 8), CLIPMASK0);
 
         if (fz > cz + (16 << 8) && s->pal != 1)
@@ -3285,10 +3285,10 @@ HORIZONLY:
         j = 0;
         p->posx += p->posxv >> 14;
         p->posy += p->posyv >> 14;
-        updatesector(p->posx, p->posy, &p->cursectnum);
+        PHYS_UpdateSector(p->posx, p->posy, &p->cursectnum);
         B_ChangeSpriteSect(pi, p->cursectnum);
     } else
-        j = clipmove(&p->posx, &p->posy, &p->posz, &p->cursectnum, p->posxv,
+        j = PHYS_ClipMove(&p->posx, &p->posy, &p->posz, &p->cursectnum, p->posxv,
                      p->posyv, 164L, (4L << 8), i, CLIPMASK0);
 
     if (p->jetpack_on == 0 && psectlotag != 2 && psectlotag != 1 && shrunk)
@@ -3331,7 +3331,7 @@ HORIZONLY:
         B_ChangeSpriteSect(pi, p->cursectnum);
 
     if (ud.clipping == 0)
-        j = (pushmove(&p->posx, &p->posy, &p->posz, &p->cursectnum, 164L,
+        j = (PHYS_PushMove(&p->posx, &p->posy, &p->posz, &p->cursectnum, 164L,
                       (4L << 8), (4L << 8), CLIPMASK0)
                  < 0
              && furthestangle(pi, 8) < 512);
@@ -3551,7 +3551,7 @@ SHOOTINCODE:
                         int32_t sx, sy, sz;
                         short sect, hw, hitsp;
 
-                        hitscan(p->posx, p->posy, p->posz, p->cursectnum,
+                        PHYS_Hitscan(p->posx, p->posy, p->posz, p->cursectnum,
                                 sintable[(p->ang + 512) & 2047],
                                 sintable[p->ang & 2047],
                                 (100 - p->horiz - p->horizoff) * 32, &sect, &hw,
@@ -4106,7 +4106,7 @@ void P_ComputerGetInput(int32_t snum, input* syn) {
         y2 = sprite[ps[goalplayer[snum]].i].y;
         z2 = sprite[ps[goalplayer[snum]].i].z;
 
-        if (!cansee(x1, y1, z1 - (48 << 8), damysect, x2, y2, z2 - (48 << 8),
+        if (!PHYS_CanSee(x1, y1, z1 - (48 << 8), damysect, x2, y2, z2 - (48 << 8),
                     sprite[ps[goalplayer[snum]].i].sectnum))
             goalplayer[snum] = snum;
     }
@@ -4122,7 +4122,7 @@ void P_ComputerGetInput(int32_t snum, input* syn) {
                 x2 = sprite[ps[i].i].x;
                 y2 = sprite[ps[i].i].y;
                 z2 = sprite[ps[i].i].z;
-                if (!cansee(x1, y1, z1 - (48 << 8), damysect, x2, y2,
+                if (!PHYS_CanSee(x1, y1, z1 - (48 << 8), damysect, x2, y2,
                             z2 - (48 << 8), sprite[ps[i].i].sectnum))
                     dist <<= 1;
 
@@ -4186,7 +4186,7 @@ void P_ComputerGetInput(int32_t snum, input* syn) {
                            << 2);
                     z3 += (sprite[j].zvel << 2);
                 } else {
-                    hitscan(sprite[j].x, sprite[j].y, sprite[j].z,
+                    PHYS_Hitscan(sprite[j].x, sprite[j].y, sprite[j].z,
                             sprite[j].sectnum,
                             mulscale14(sprite[j].xvel,
                                        sintable[(sprite[j].ang + 512) & 2047]),
@@ -4200,11 +4200,11 @@ void P_ComputerGetInput(int32_t snum, input* syn) {
     }
 
     if ((ps[goalplayer[snum]].dead_flag == 0)
-        && ((cansee(x1, y1, z1, damysect, x2, y2, z2,
+        && ((PHYS_CanSee(x1, y1, z1, damysect, x2, y2, z2,
                     sprite[ps[goalplayer[snum]].i].sectnum))
-            || (cansee(x1, y1, z1 - (24 << 8), damysect, x2, y2, z2 - (24 << 8),
+            || (PHYS_CanSee(x1, y1, z1 - (24 << 8), damysect, x2, y2, z2 - (24 << 8),
                        sprite[ps[goalplayer[snum]].i].sectnum))
-            || (cansee(x1, y1, z1 - (48 << 8), damysect, x2, y2, z2 - (48 << 8),
+            || (PHYS_CanSee(x1, y1, z1 - (48 << 8), damysect, x2, y2, z2 - (48 << 8),
                        sprite[ps[goalplayer[snum]].i].sectnum)))) {
         syn->bits |= (1 << 2);
 
@@ -4215,7 +4215,7 @@ void P_ComputerGetInput(int32_t snum, input* syn) {
             syn->bits |= ((rand() % MAX_WEAPONS) << 8);
 
         if (p->curr_weapon == RPG_WEAPON) {
-            hitscan(x1, y1, z1 - PHEIGHT, damysect,
+            PHYS_Hitscan(x1, y1, z1 - PHEIGHT, damysect,
                     sintable[(damyang + 512) & 2047], sintable[damyang & 2047],
                     (100 - p->horiz - p->horizoff) * 32, &dasect, &dawall,
                     &daspr, &x3, &y3, &z3, CLIPMASK1);
@@ -4441,7 +4441,7 @@ void P_ComputerGetInput(int32_t snum, input* syn) {
                         continue;
                     if (getspritescore(snum, sprite[j].picnum) <= 0)
                         continue;
-                    if (cansee(x1, y1, z1 - (32 << 8), damysect, sprite[j].x,
+                    if (PHYS_CanSee(x1, y1, z1 - (32 << 8), damysect, sprite[j].x,
                                sprite[j].y, sprite[j].z - (4 << 8), i)) {
                         goalx[snum] = sprite[j].x;
                         goaly[snum] = sprite[j].y;
@@ -4469,14 +4469,14 @@ void P_ComputerGetInput(int32_t snum, input* syn) {
     y3 = p->posy;
     z3 = p->posz;
     dasect = p->cursectnum;
-    i = clipmove(&x3, &y3, &z3, &dasect, p->posxv, p->posyv, 164L, 4L << 8,
+    i = PHYS_ClipMove(&x3, &y3, &z3, &dasect, p->posxv, p->posyv, 164L, 4L << 8,
                  4L << 8, CLIPMASK0);
     if (!i) {
         x3 = p->posx;
         y3 = p->posy;
         z3 = p->posz + (24 << 8);
         dasect = p->cursectnum;
-        i = clipmove(&x3, &y3, &z3, &dasect, p->posxv, p->posyv, 164L, 4L << 8,
+        i = PHYS_ClipMove(&x3, &y3, &z3, &dasect, p->posxv, p->posyv, 164L, 4L << 8,
                      4L << 8, CLIPMASK0);
     }
     if (i) {

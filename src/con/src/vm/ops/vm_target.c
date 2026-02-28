@@ -92,7 +92,7 @@ void VM_IfCanSeeTarget(con_vm_t* vm) {
     i32 y2 = plr->posy;
     i32 z2 = plr->posz;
     short sect2 = sprite[plr->i].sectnum;
-    bool can_see = cansee(x1, y1, z1, sect1, x2, y2, z2, sect2);
+    bool can_see = PHYS_CanSee(x1, y1, z1, sect1, x2, y2, z2, sect2);
     VM_IfElse(vm, can_see);
     if (can_see) {
         vm->sprite_hit->timetosleep = SLEEPTIME;

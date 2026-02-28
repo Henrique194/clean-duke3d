@@ -1605,7 +1605,7 @@ void P_CheckHitWall(short spr,short dawallnum,int32_t x,int32_t y,int32_t z,shor
         case W_FORCEFIELD+2:
             wal->extra = 1; // tell the forces to animate
         case BIGFORCE:
-            updatesector(x,y,&sn);
+            PHYS_UpdateSector(x,y,&sn);
             if( sn < 0 ) return;
 
             if(atwith == -1)
@@ -1638,7 +1638,7 @@ void P_CheckHitWall(short spr,short dawallnum,int32_t x,int32_t y,int32_t z,shor
             return;
 
         case GLASS:
-            updatesector(x,y,&sn); if( sn < 0 ) return;
+            PHYS_UpdateSector(x,y,&sn); if( sn < 0 ) return;
             wal->overpicnum=GLASS2;
             lotsofglass(spr,dawallnum,10);
             wal->cstat = 0;
@@ -1651,7 +1651,7 @@ void P_CheckHitWall(short spr,short dawallnum,int32_t x,int32_t y,int32_t z,shor
             spritesound(GLASS_BREAKING,i);
             return;
         case STAINGLASS1:
-            updatesector(x,y,&sn); if( sn < 0 ) return;
+            PHYS_UpdateSector(x,y,&sn); if( sn < 0 ) return;
             lotsofcolourglass(spr,dawallnum,80);
             wal->cstat = 0;
             if(wal->nextwall >= 0)
@@ -2324,7 +2324,7 @@ void P_CheckHitSprite(short i,short sn)
                             SA = (sprite[sn].ang+1024)&2047;
                         sprite[i].xvel = -(sprite[sn].extra<<2);
                         j = SECT;
-                        pushmove(&SX,&SY,&SZ,&j,128L,(4L<<8),(4L<<8),CLIPMASK0);
+                        PHYS_PushMove(&SX,&SY,&SZ,&j,128L,(4L<<8),(4L<<8),CLIPMASK0);
                         if(j != SECT && j >= 0 && j < MAXSECTORS)
                             B_ChangeSpriteSect(i,j);
                     }
@@ -2359,7 +2359,7 @@ void P_CheckHitSprite(short i,short sn)
                         ps[p].posz = ps[p].oposz;
                         ps[p].ang = ps[p].oang;
 
-                        updatesector(ps[p].posx,ps[p].posy,&ps[p].cursectnum);
+                        PHYS_UpdateSector(ps[p].posx,ps[p].posy,&ps[p].cursectnum);
                         P_SetPal(&ps[p]);
 
                         j = headspritestat[1];
@@ -3015,17 +3015,17 @@ void P_CheckSectors(short snum)
         }
 
         if(p->newowner >= 0)
-            neartag(p->oposx,p->oposy,p->oposz,sprite[p->i].sectnum,p->oang,&neartagsector,&neartagwall,&neartagsprite,&neartaghitdist,1280L,1);
+            PHYS_NearTag(p->oposx,p->oposy,p->oposz,sprite[p->i].sectnum,p->oang,&neartagsector,&neartagwall,&neartagsprite,&neartaghitdist,1280L,1);
         else
         {
-            neartag(p->posx,p->posy,p->posz,sprite[p->i].sectnum,p->oang,&neartagsector,&neartagwall,&neartagsprite,&neartaghitdist,1280L,1);
+            PHYS_NearTag(p->posx,p->posy,p->posz,sprite[p->i].sectnum,p->oang,&neartagsector,&neartagwall,&neartagsprite,&neartaghitdist,1280L,1);
             if(neartagsprite == -1 && neartagwall == -1 && neartagsector == -1)
-                neartag(p->posx,p->posy,p->posz+(8<<8),sprite[p->i].sectnum,p->oang,&neartagsector,&neartagwall,&neartagsprite,&neartaghitdist,1280L,1);
+                PHYS_NearTag(p->posx,p->posy,p->posz+(8<<8),sprite[p->i].sectnum,p->oang,&neartagsector,&neartagwall,&neartagsprite,&neartaghitdist,1280L,1);
             if(neartagsprite == -1 && neartagwall == -1 && neartagsector == -1)
-                neartag(p->posx,p->posy,p->posz+(16<<8),sprite[p->i].sectnum,p->oang,&neartagsector,&neartagwall,&neartagsprite,&neartaghitdist,1280L,1);
+                PHYS_NearTag(p->posx,p->posy,p->posz+(16<<8),sprite[p->i].sectnum,p->oang,&neartagsector,&neartagwall,&neartagsprite,&neartaghitdist,1280L,1);
             if(neartagsprite == -1 && neartagwall == -1 && neartagsector == -1)
             {
-                neartag(p->posx,p->posy,p->posz+(16<<8),sprite[p->i].sectnum,p->oang,&neartagsector,&neartagwall,&neartagsprite,&neartaghitdist,1280L,3);
+                PHYS_NearTag(p->posx,p->posy,p->posz+(16<<8),sprite[p->i].sectnum,p->oang,&neartagsector,&neartagwall,&neartagsprite,&neartaghitdist,1280L,3);
                 if(neartagsprite >= 0)
                 {
                     switch(sprite[neartagsprite].picnum)
@@ -3173,7 +3173,7 @@ void P_CheckSectors(short snum)
                         p->ang = p->oang;
                         p->newowner = -1;
 
-                        updatesector(p->posx,p->posy,&p->cursectnum);
+                        PHYS_UpdateSector(p->posx,p->posy,&p->cursectnum);
                         P_SetPal(p);
 
 

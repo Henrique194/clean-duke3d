@@ -1803,7 +1803,7 @@ void updatesectorz(int32_t x, int32_t y, int32_t z, short* sectnum) {
 
     getzsofslope(*sectnum, x, y, &cz, &fz);
     if ((z >= cz) && (z <= fz))
-        if (inside(x, y, *sectnum) != 0)
+        if (PHYS_Inside(x, y, *sectnum) != 0)
             return;
 
     if ((*sectnum >= 0) && (*sectnum < numsectors)) {
@@ -1814,7 +1814,7 @@ void updatesectorz(int32_t x, int32_t y, int32_t z, short* sectnum) {
             if (i >= 0) {
                 getzsofslope(i, x, y, &cz, &fz);
                 if ((z >= cz) && (z <= fz))
-                    if (inside(x, y, (short) i) == 1) {
+                    if (PHYS_Inside(x, y, (short) i) == 1) {
                         *sectnum = i;
                         return;
                     }
@@ -1827,7 +1827,7 @@ void updatesectorz(int32_t x, int32_t y, int32_t z, short* sectnum) {
     for (i = numsectors - 1; i >= 0; i--) {
         getzsofslope(i, x, y, &cz, &fz);
         if ((z >= cz) && (z <= fz))
-            if (inside(x, y, (short) i) == 1) {
+            if (PHYS_Inside(x, y, (short) i) == 1) {
                 *sectnum = i;
                 return;
             }
@@ -1852,7 +1852,7 @@ void view(struct player_struct* pp, int32_t* vx, int32_t* vy, int32_t* vz,
     sp->cstat &= (short) ~0x101;
 
     updatesectorz(*vx, *vy, *vz, vsectnum);
-    hitscan(*vx, *vy, *vz, *vsectnum, nx, ny, nz, &hitsect, &hitwall,
+    PHYS_Hitscan(*vx, *vy, *vz, *vsectnum, nx, ny, nz, &hitsect, &hitwall,
             &hitsprite, &hitx, &hity, &hitz, CLIPMASK1);
 
     if (*vsectnum < 0) {
@@ -2842,15 +2842,15 @@ short spawn(short j, short pn) {
             short s1;
             s1 = sp->sectnum;
 
-            updatesector(sp->x + 108, sp->y + 108, &s1);
+            PHYS_UpdateSector(sp->x + 108, sp->y + 108, &s1);
             if (s1 >= 0 && sector[s1].floorz == sector[sp->sectnum].floorz) {
-                updatesector(sp->x - 108, sp->y - 108, &s1);
+                PHYS_UpdateSector(sp->x - 108, sp->y - 108, &s1);
                 if (s1 >= 0
                     && sector[s1].floorz == sector[sp->sectnum].floorz) {
-                    updatesector(sp->x + 108, sp->y - 108, &s1);
+                    PHYS_UpdateSector(sp->x + 108, sp->y - 108, &s1);
                     if (s1 >= 0
                         && sector[s1].floorz == sector[sp->sectnum].floorz) {
-                        updatesector(sp->x - 108, sp->y + 108, &s1);
+                        PHYS_UpdateSector(sp->x - 108, sp->y + 108, &s1);
                         if (s1 >= 0
                             && sector[s1].floorz
                                    != sector[sp->sectnum].floorz) {
@@ -3054,17 +3054,17 @@ short spawn(short j, short pn) {
                 short s1;
                 s1 = sp->sectnum;
 
-                updatesector(sp->x + 84, sp->y + 84, &s1);
+                PHYS_UpdateSector(sp->x + 84, sp->y + 84, &s1);
                 if (s1 >= 0
                     && sector[s1].floorz == sector[sp->sectnum].floorz) {
-                    updatesector(sp->x - 84, sp->y - 84, &s1);
+                    PHYS_UpdateSector(sp->x - 84, sp->y - 84, &s1);
                     if (s1 >= 0
                         && sector[s1].floorz == sector[sp->sectnum].floorz) {
-                        updatesector(sp->x + 84, sp->y - 84, &s1);
+                        PHYS_UpdateSector(sp->x + 84, sp->y - 84, &s1);
                         if (s1 >= 0
                             && sector[s1].floorz
                                    == sector[sp->sectnum].floorz) {
-                            updatesector(sp->x - 84, sp->y + 84, &s1);
+                            PHYS_UpdateSector(sp->x - 84, sp->y + 84, &s1);
                             if (s1 >= 0
                                 && sector[s1].floorz
                                        != sector[sp->sectnum].floorz) {
@@ -7666,7 +7666,7 @@ void fakedomovethings(void) {
     omyz = myz;
     omyang = myang;
 
-    getzrange(myx, myy, myz, psect, &cz, &hz, &fz, &lz, 163L, CLIPMASK0);
+    PHYS_GetZRange(myx, myy, myz, psect, &cz, &hz, &fz, &lz, 163L, CLIPMASK0);
 
     j = getflorzofslope(psect, myx, myy);
 
@@ -7679,7 +7679,7 @@ void fakedomovethings(void) {
         x = myx + (sintable[(myang + 512) & 2047] >> 5);
         y = myy + (sintable[myang & 2047] >> 5);
         tempsect = psect;
-        updatesector(x, y, &tempsect);
+        PHYS_UpdateSector(x, y, &tempsect);
         if (tempsect >= 0) {
             k = getflorzofslope(psect, x, y);
             if (psect == tempsect)
@@ -7721,12 +7721,12 @@ void fakedomovethings(void) {
                 if (klabs(myz - fz) > (PHEIGHT >> 1))
                     myz += 348;
             }
-            clipmove(&myx, &myy, &myz, &mycursectnum, 0, 0, 164L, (4L << 8),
+            PHYS_ClipMove(&myx, &myy, &myz, &mycursectnum, 0, 0, 164L, (4L << 8),
                      (4L << 8), CLIPMASK0);
         }
 
-        updatesector(myx, myy, &mycursectnum);
-        pushmove(&myx, &myy, &myz, &mycursectnum, 128L, (4L << 8), (20L << 8),
+        PHYS_UpdateSector(myx, myy, &mycursectnum);
+        PHYS_PushMove(&myx, &myy, &myz, &mycursectnum, 128L, (4L << 8), (20L << 8),
                  CLIPMASK0);
 
         myhoriz = 100;
@@ -7970,9 +7970,9 @@ FAKEHORIZONLY:
     else
         i = (20L << 8);
 
-    clipmove(&myx, &myy, &myz, &mycursectnum, myxvel, myyvel, 164L, 4L << 8, i,
+    PHYS_ClipMove(&myx, &myy, &myz, &mycursectnum, myxvel, myyvel, 164L, 4L << 8, i,
              CLIPMASK0);
-    pushmove(&myx, &myy, &myz, &mycursectnum, 164L, 4L << 8, 4L << 8,
+    PHYS_PushMove(&myx, &myy, &myz, &mycursectnum, 164L, 4L << 8, 4L << 8,
              CLIPMASK0);
 
     if (p->jetpack_on == 0 && psectlotag != 1 && psectlotag != 2 && shrunk)
@@ -8973,7 +8973,7 @@ void lotsofglass(short i, short wallnum, short n) {
         x1 += xv;
         y1 += yv;
 
-        updatesector(x1, y1, &sect);
+        PHYS_UpdateSector(x1, y1, &sect);
         if (sect >= 0) {
             z = sector[sect].floorz
                 - (TRAND
@@ -9039,7 +9039,7 @@ void lotsofcolourglass(short i, short wallnum, short n) {
         x1 += xv;
         y1 += yv;
 
-        updatesector(x1, y1, &sect);
+        PHYS_UpdateSector(x1, y1, &sect);
         z = sector[sect].floorz
             - (TRAND & (klabs(sector[sect].ceilingz - sector[sect].floorz)));
         if (z < -(32 << 8) || z > (32 << 8))

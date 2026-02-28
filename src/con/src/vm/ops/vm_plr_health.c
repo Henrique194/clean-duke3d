@@ -33,7 +33,7 @@ static void CON_ExitCameraView(player_t* plr) {
     plr->posy = plr->oposy;
     plr->posz = plr->oposz;
     plr->ang = plr->oang;
-    updatesector(plr->posx, plr->posy, &plr->cursectnum);
+    PHYS_UpdateSector(plr->posx, plr->posy, &plr->cursectnum);
     P_SetPal(plr);
 
     // Stop all cameras motion.
