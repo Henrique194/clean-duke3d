@@ -6,7 +6,7 @@ set(CMAKE_C_STANDARD 23)
 # CMake extensions
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
-if(WIN32)
+if(MSVC)
     add_definitions(-DWIN32_LEAN_AND_MEAN)
     add_definitions(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE)
 
@@ -19,9 +19,12 @@ if(WIN32)
 
     # Compile files in parallel
     add_compile_options("/MP")
-endif()
-
-if(UNIX)
+elseif(MINGW)
+    add_definitions(-DWIN32_LEAN_AND_MEAN)
+    add_compile_options("-Wall")
+    add_compile_options("-fno-strict-aliasing")
+    add_compile_options("-fcommon")
+elseif(UNIX)
     add_definitions(-DUNIX)
     add_compile_options("-Wall")
 
@@ -42,7 +45,8 @@ if(VCPKG_TARGET_TRIPLET)
     set(SDL2_ALL_LIBRARIES
         $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
         $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
-        $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>)
+        $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>
+    )
 else()
     # On Linux we have to rely on the package system (e.g. apt-get).
     # Otherwise we are likely to be missing some SDL-mixer components (e.g. proper MIDI sound support).

@@ -25,46 +25,37 @@
 #include "con_keyword.h"
 #include "con_label.h"
 #include "con_misc.h"
-#include "con/con.h"
+#include "con_script/con_script.h"
 
-void CON_Move(con_compiler_t* ctx) {
+void CON_Action(con_compiler_t* ctx) {
     if (ctx->curr_actor || ctx->in_state_block) {
         CON_LexNum(ctx);
-        i32 j = 0;
-        while (CON_PeekKeyword(ctx) == -1) {
-            CON_LexNum(ctx);
-            ctx->script_cursor--;
-            j |= *ctx->script_cursor;
-        }
-        *ctx->script_cursor = j;
-        ctx->script_cursor++;
         return;
     }
 
     ctx->script_cursor--;
     const char* str = CON_LexLabel(ctx);
 
-    // Check to see it's already defined
+    // Check to see it's already defined.
     if (CON_IsKeyword(str)) {
         CON_Error("Symbol '%s' is a key word.\n", str);
         return;
     }
     if (CON_IsLabel(ctx, str)) {
-        CON_Warn("Duplicate move '%s' ignored.\n", str);
+        CON_Warn("Duplicate action '%s' ignored.\n", str);
     } else {
         ctx->label_code[ctx->label_cnt] = CON_EncodeScript(ctx->script_cursor);
         ctx->label_cnt++;
     }
 
-    i32 j;
-    for (j = 0; j < 2; j++) {
-        if (CON_PeekKeyword(ctx) >= 0) {
-            break;
-        }
+    i32 i = 0;
+    while (i < 5 && CON_PeekKeyword(ctx) < 0) {
         CON_LexNum(ctx);
+        i++;
     }
-    for (i32 k = j; k < 2; k++) {
+    while (i < 5) {
         *ctx->script_cursor = 0;
         ctx->script_cursor++;
+        i++;
     }
 }

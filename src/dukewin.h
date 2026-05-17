@@ -23,7 +23,9 @@
 
 #pragma once
 
+#ifdef _MSC_VER
 #pragma warning(disable : 4761)
+#endif
 
 #ifdef _DEBUG
 #define STUBBED(x) printf("STUB: %s in %s:%d\n", x, __FILE__, __LINE__)
@@ -37,6 +39,7 @@
 #include <sys/stat.h>
 #include <io.h>
 #include <assert.h>
+#include <fcntl.h>
 
 struct find_t {
     int32_t handle;
@@ -68,21 +71,48 @@ struct dosdate_t {
 
 #define cdecl
 
-#define open     _open
-#define O_BINARY _O_BINARY
-#define O_RDONLY _O_RDONLY
-#define O_WRONLY _O_WRONLY
-#define O_RDWR   _O_RDWR
-#define O_TRUNC  _O_TRUNC
-#define O_CREAT  _O_CREAT
-#define S_IREAD  _S_IREAD
-#define S_IWRITE _S_IWRITE
-#define S_IRDWR  _S_IRDWR
+#define open _open
 
+#ifndef O_BINARY
+#define O_BINARY _O_BINARY
+#endif
+#ifndef O_RDONLY
+#define O_RDONLY _O_RDONLY
+#endif
+#ifndef O_WRONLY
+#define O_WRONLY _O_WRONLY
+#endif
+#ifndef O_RDWR
+#define O_RDWR _O_RDWR
+#endif
+#ifndef O_TRUNC
+#define O_TRUNC _O_TRUNC
+#endif
+#ifndef O_CREAT
+#define O_CREAT _O_CREAT
+#endif
+#ifndef S_IREAD
+#define S_IREAD _S_IREAD
+#endif
+#ifndef S_IWRITE
+#define S_IWRITE _S_IWRITE
+#endif
+#ifndef S_IRDWR
+#define S_IRDWR _S_IRDWR
+#endif
+
+#ifndef S_IRUSR
 #define S_IRUSR S_IREAD
+#endif
+#ifndef S_IWUSR
 #define S_IWUSR S_IWRITE
+#endif
+#ifndef S_IRGRP
 #define S_IRGRP 0
+#endif
+#ifndef S_IWGRP
 #define S_IWGRP 0
+#endif
 
 #define F_OK 0
 

@@ -265,6 +265,10 @@ short cloudy[128];
 int32_t cloudtotalclock = 0;
 int32_t totalmemory = 0;
 
+/* set these in your _platform_init() implementation. */
+int _argc;
+char** _argv;
+
 
 // portability stuff.  --ryan.
 // A good portion of this was ripped from GPL'd Rise of the Triad.  --ryan.

@@ -31,6 +31,7 @@
 #include "names.h"
 #include "funct.h"
 #include <SDL_stdinc.h>
+#include <time.h>
 #include <stdio.h>
 #include <string.h>
 

@@ -24,40 +24,50 @@
 #include "con_cmds.h"
 #include "con_keyword.h"
 #include "con_label.h"
-#include "con/con.h"
+#include "con_misc.h"
+#include "con_script/con_script.h"
+#include "types.h"
 
-void CON_State(con_compiler_t* ctx) {
-    if (!ctx->curr_actor && !ctx->in_state_block) {
-        CON_LexLabel(ctx);
-        ctx->script_cursor--;
-        ctx->label_code[ctx->label_cnt] = CON_EncodeScript(ctx->script_cursor);
-        ctx->label_cnt++;
-        ctx->in_state_block = 1;
+void CON_AI(con_compiler_t* ctx) {
+    if (ctx->curr_actor || ctx->in_state_block) {
+        CON_LexNum(ctx);
         return;
     }
+
+    ctx->script_cursor--;
     const char* str = CON_LexLabel(ctx);
     if (CON_IsKeyword(str)) {
         CON_Error("Symbol '%s' is a key word.\n", str);
         return;
     }
-    const int code = CON_GetLabel(ctx, str);
-    if (code >= 0) {
-        *ctx->script_cursor = ctx->label_code[code];
+    if (CON_IsLabel(ctx, str)) {
+        CON_Warn("Duplicate ai '%s' ignored.\n", str);
     } else {
-        CON_Error("State '%s' not found.\n", str);
+        ctx->label_code[ctx->label_cnt] = CON_EncodeScript(ctx->script_cursor);
+        ctx->label_cnt++;
     }
-    ctx->script_cursor++;
-}
 
-void CON_Ends(con_compiler_t* ctx) {
-    if (ctx->in_state_block == 0) {
-        CON_Error("Found 'ends' with no 'state'.\n");
+    i32 j;
+    for (j = 0; j < 3; j++) {
+        if (CON_PeekKeyword(ctx) >= 0) {
+            break;
+        }
+        if (j == 2) {
+            i32 k = 0;
+            while (CON_PeekKeyword(ctx) == -1) {
+                CON_LexNum(ctx);
+                ctx->script_cursor--;
+                k |= *ctx->script_cursor;
+            }
+            *ctx->script_cursor = k;
+            ctx->script_cursor++;
+            return;
+        }
+        CON_LexNum(ctx);
     }
-    if (ctx->brace_depth > 0) {
-        CON_Error("Found more '{' than '}' before 'ends'.\n");
+
+    for (i32 k = j; k < 3; k++) {
+        *ctx->script_cursor = 0;
+        ctx->script_cursor++;
     }
-    if (ctx->brace_depth < 0) {
-        CON_Error("Found more '}' than '{' before 'ends'.\n");
-    }
-    ctx->in_state_block = 0;
 }

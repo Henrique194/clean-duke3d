@@ -25,7 +25,7 @@
 #include "con_keyword.h"
 #include "con_misc.h"
 #include "con_parser.h"
-#include "con/con.h"
+#include "con_script/con_script.h"
 
 void CON_If(con_compiler_t* ctx) {
     i32* tempscrptr = ctx->script_cursor;

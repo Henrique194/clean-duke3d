@@ -90,7 +90,7 @@ void setviewtotile(int16_t tilenume, int32_t xsiz, int32_t ysiz);
 void setviewback(void);
 void squarerotatetile(int16_t tilenume);
 
-#include "cache.h"
+#include "memory/cache.h"
 #include "build/filesystem.h"
 #include "build/fixedPoint_math.h"
 #include "build/tiles.h"

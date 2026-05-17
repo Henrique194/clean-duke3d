@@ -31,7 +31,7 @@
 
 #pragma once
 
-#include "con/con.h"
+#include "con_script/con_script.h"
 
 //
 // Setup program defines

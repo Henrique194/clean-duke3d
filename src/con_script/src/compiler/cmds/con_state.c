@@ -24,38 +24,40 @@
 #include "con_cmds.h"
 #include "con_keyword.h"
 #include "con_label.h"
-#include "con_misc.h"
-#include "con/con.h"
+#include "con_script/con_script.h"
 
-void CON_Action(con_compiler_t* ctx) {
-    if (ctx->curr_actor || ctx->in_state_block) {
-        CON_LexNum(ctx);
+void CON_State(con_compiler_t* ctx) {
+    if (!ctx->curr_actor && !ctx->in_state_block) {
+        CON_LexLabel(ctx);
+        ctx->script_cursor--;
+        ctx->label_code[ctx->label_cnt] = CON_EncodeScript(ctx->script_cursor);
+        ctx->label_cnt++;
+        ctx->in_state_block = 1;
         return;
     }
-
-    ctx->script_cursor--;
     const char* str = CON_LexLabel(ctx);
-
-    // Check to see it's already defined.
     if (CON_IsKeyword(str)) {
         CON_Error("Symbol '%s' is a key word.\n", str);
         return;
     }
-    if (CON_IsLabel(ctx, str)) {
-        CON_Warn("Duplicate action '%s' ignored.\n", str);
+    const int code = CON_GetLabel(ctx, str);
+    if (code >= 0) {
+        *ctx->script_cursor = ctx->label_code[code];
     } else {
-        ctx->label_code[ctx->label_cnt] = CON_EncodeScript(ctx->script_cursor);
-        ctx->label_cnt++;
+        CON_Error("State '%s' not found.\n", str);
     }
+    ctx->script_cursor++;
+}
 
-    i32 i = 0;
-    while (i < 5 && CON_PeekKeyword(ctx) < 0) {
-        CON_LexNum(ctx);
-        i++;
+void CON_Ends(con_compiler_t* ctx) {
+    if (ctx->in_state_block == 0) {
+        CON_Error("Found 'ends' with no 'state'.\n");
     }
-    while (i < 5) {
-        *ctx->script_cursor = 0;
-        ctx->script_cursor++;
-        i++;
+    if (ctx->brace_depth > 0) {
+        CON_Error("Found more '{' than '}' before 'ends'.\n");
     }
+    if (ctx->brace_depth < 0) {
+        CON_Error("Found more '}' than '{' before 'ends'.\n");
+    }
+    ctx->in_state_block = 0;
 }

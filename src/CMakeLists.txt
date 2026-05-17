@@ -29,7 +29,7 @@ set(LIBS
     audiolib
     automap
     build
-    con
+    con_script
     config
     console
     hud

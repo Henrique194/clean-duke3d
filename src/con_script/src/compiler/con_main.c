@@ -22,7 +22,7 @@
  */
 
 #include <SDL_stdinc.h>
-#include "con/con.h"
+#include "con_script/con_script.h"
 #include "con_main.h"
 #include "con_parser.h"
 #include "build/engine.h"
@@ -50,7 +50,7 @@ static void CON_ReadFile(i32 fp) {
 #ifdef UNIX
     ctx.cursor[length - 1] = 0;
 #else
-    ctx.cursor[fs - 2] = 0;
+    ctx.cursor[length - 2] = 0;
 #endif
 }
 

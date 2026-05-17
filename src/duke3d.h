@@ -665,7 +665,7 @@ extern short probey;
 extern short lastprobey;
 
 extern uint8_t typebuflen;
-char typebuf[41];
+extern char typebuf[41];
 extern int32_t msx[2048];
 extern int32_t msy[2048];
 extern short cyclers[MAXCYCLERS][6];

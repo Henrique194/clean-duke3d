@@ -34,7 +34,7 @@
 
 #include "build/filesystem.h"
 #include "build/platform.h"
-#include "cache.h"
+#include "memory/cache.h"
 #include "build/fixedPoint_math.h"
 #include "global.h"
 #include "memory/cache.h"

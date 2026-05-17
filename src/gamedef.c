@@ -28,7 +28,7 @@
 #include <SDL_stdinc.h>
 #include "duke3d.h"
 #include "gamedefs.h"
-#include "con/con.h"
+#include "con_script/con_script.h"
 #include "build/engine.h"
 #include "input/keyboard.h"
 #include "soundefs.h"

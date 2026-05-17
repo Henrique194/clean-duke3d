@@ -34,9 +34,8 @@
 #include "duke3d.h"
 #include "rts/rts.h"
 #include "_rts.h"
-#include "cache.h"
-#include "global.h"
 #include "memory/cache.h"
+#include "global.h"
 
 //=============
 // STATICS

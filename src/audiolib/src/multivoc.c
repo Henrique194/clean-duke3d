@@ -49,6 +49,8 @@
 // #define IS_QUIET( ptr )  ( ( void * )( ptr ) == ( void * )&MV_VolumeTable[ 0 ] )
 #define IS_QUIET( vol ) ( ( vol ) == 0 )
 
+SDL_mutex* reverbMutex;
+
 static int       MV_ReverbLevel;
 int       MV_ReverbDelay;
 static int       MV_ReverbTable = -1;
@@ -2299,7 +2301,7 @@ int MV_Init
 	   return( MV_Error);
    }
 
-   MV_FooBuffer = ptr;
+   MV_FooBuffer = (double*) ptr;
 
 // Start the playback engine
    status = MV_StartPlayback();

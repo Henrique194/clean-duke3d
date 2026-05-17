@@ -1,4 +1,4 @@
-set(LIB con)
+set(LIB con_script)
 
 list(REMOVE_ITEM LIBS ${LIB})
 

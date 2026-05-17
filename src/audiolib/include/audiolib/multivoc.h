@@ -182,4 +182,4 @@ int MV_Init(
 int MV_Shutdown(void);
 
 //CRITICAL_SECTION reverbCS;
-SDL_mutex* reverbMutex;
+extern SDL_mutex* reverbMutex;
